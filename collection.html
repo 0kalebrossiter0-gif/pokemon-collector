@@ -131,4 +131,49 @@
 
           totalValue += price;
 
-          const cardD
+          const cardDiv = document.createElement("div");
+          cardDiv.className = "card";
+
+          cardDiv.innerHTML = `
+            ${image ? `<img src="${image}" alt="${name}">` : ""}
+            <h3>${name}</h3>
+            <p class="details">${setName} ${number}</p>
+            <p class="details"><strong>Rarity:</strong> ${rarity}</p>
+            <p class="price">
+              ${price > 0 ? `$${price.toFixed(2)}` : "Price not available"}
+            </p>
+            <button>Remove</button>
+          `;
+
+          cardDiv.querySelector("button").addEventListener("click", () => {
+            removeCard(card.id);
+          });
+
+          collectionDiv.appendChild(cardDiv);
+        });
+
+        totalValueEl.textContent =
+          `Total Collection Value: $${totalValue.toFixed(2)}`;
+      }
+
+      function getPrice(card) {
+        return (
+          card.tcgplayer?.prices?.holofoil?.market ??
+          card.tcgplayer?.prices?.normal?.market ??
+          0
+        );
+      }
+
+      function removeCard(cardId) {
+        collection = collection.filter(c => c.id !== cardId);
+        localStorage.setItem(
+          "collection",
+          JSON.stringify(collection)
+        );
+        applyFilters();
+      }
+    });
+  </script>
+
+</body>
+</html>
