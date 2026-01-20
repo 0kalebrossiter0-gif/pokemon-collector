@@ -18,7 +18,9 @@ async function searchCards() {
   resultsDiv.innerHTML = "Loading...";
 
   try {
-    const res = await fetch(`${API_URL}?q=name:${query}&pageSize=40`);
+    const res = await fetch(
+      `${API_URL}?q=name:${query}&pageSize=100`
+    );
     const data = await res.json();
 
     resultsDiv.innerHTML = "";
@@ -31,42 +33,4 @@ async function searchCards() {
     data.data.forEach(card => {
       const imageUrl = card.images?.small;
 
-      // Only allow real front images
-      if (!imageUrl || imageUrl.toLowerCase().includes("back")) return;
-
-      const div = document.createElement("div");
-      div.className = "card";
-
-      const price =
-        card.tcgplayer?.prices?.holofoil?.market ??
-        card.tcgplayer?.prices?.normal?.market ??
-        null;
-
-      div.innerHTML = `
-        <img src="${imageUrl}" alt="${card.name}" />
-        <h3>${card.name}</h3>
-        <p class="price">
-          ${price ? `$${price}` : "No market price"}
-        </p>
-        <button>Add to Collection</button>
-      `;
-
-      div.querySelector("button").addEventListener("click", () => {
-        saveCard(card);
-      });
-
-      resultsDiv.appendChild(div);
-    });
-
-  } catch (err) {
-    resultsDiv.innerHTML = "Error loading cards.";
-  }
-}
-
-// Save to collection
-function saveCard(card) {
-  const collection = JSON.parse(localStorage.getItem("collection")) || [];
-  collection.push(card);
-  localStorage.setItem("collection", JSON.stringify(collection));
-  alert("Added to collection!");
-}
+      // 🚫 Skip car
