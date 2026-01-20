@@ -112,4 +112,59 @@ function render() {
 
   filtered.forEach(card => {
     const el = document.createElement("div");
-    el.className =
+    el.className = "card";
+
+    el.innerHTML = `
+      <div class="card-inner">
+        <div class="card-front">
+          <img src="${card.images?.small || ""}">
+        </div>
+        <div class="card-back">
+          <h3>${card.name}</h3>
+          <p>${card.set?.name}</p>
+          <p><strong>${card.rarity || "Unknown"}</strong></p>
+          <p class="price">
+            ${price(card) ? "$"+price(card).toFixed(2) : "No price"}
+          </p>
+          <button onclick="removeCard('${card.id}')">Delete</button>
+        </div>
+      </div>
+    `;
+
+    grid.appendChild(el);
+  });
+}
+
+function updateStats(cards) {
+  const prices = cards.map(price).filter(p=>p>0);
+  const total = prices.reduce((a,b)=>a+b,0);
+  const avg = prices.length ? total/prices.length : 0;
+
+  let top = null;
+  let topPrice = 0;
+  cards.forEach(c=>{
+    if(price(c)>topPrice){
+      topPrice = price(c);
+      top = c;
+    }
+  });
+
+  statCount.textContent = `Cards: ${cards.length}`;
+  statTotal.textContent = `Total Value: $${total.toFixed(2)}`;
+  statAvg.textContent = `Average Value: $${avg.toFixed(2)}`;
+  statTop.textContent = top
+    ? `Most Valuable: ${top.name} ($${topPrice.toFixed(2)})`
+    : "";
+}
+
+function removeCard(id) {
+  collection = collection.filter(c=>c.id!==id);
+  localStorage.setItem("collection", JSON.stringify(collection));
+  render();
+}
+
+render();
+</script>
+
+</body>
+</html>
