@@ -1,36 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Pokémon Card Collector</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css" />
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <header>
-    <h1>Pokémon Card Collector</h1>
-    <a href="collection.html">My Collection</a>
+  <!-- Header -->
+  <header class="site-header">
+    <img src="pokemon-logo.png" alt="Pokémon Logo" class="logo">
+    <nav>
+      <a href="index.html">Search</a>
+      <a href="collection.html">My Collection</a>
+    </nav>
   </header>
 
+  <!-- Main Content -->
   <main>
-
+    <!-- Search Section -->
     <section class="search">
       <input
         type="text"
         id="searchInput"
-        placeholder="Search Pokémon (e.g. Pikachu)"
-      />
+        placeholder="Search Pokémon cards (e.g. Pikachu)"
+      >
       <button id="searchBtn">Search</button>
     </section>
 
-    <section id="results" class="grid"></section>
-
+    <!-- Results -->
+    <section>
+      <div id="results" class="grid"></div>
+    </section>
   </main>
 
-  <!-- JavaScript -->
+  <!-- Script -->
   <script src="script.js"></script>
 </body>
 </html>
