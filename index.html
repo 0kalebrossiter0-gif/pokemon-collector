@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pokémon Card Scanner</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Link to CSS -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <h1>Pokémon Card Scanner</h1>
+    <a href="collection.html">My Collection</a>
+  </header>
+
+  <main>
+
+    <!-- Upload Section -->
+    <section class="upload">
+      <h2>Upload Card Image</h2>
+      <input type="file" id="imageInput" accept="image/*" />
+      <p class="hint">
+        Upload a photo of your card, then search by name to confirm it
+      </p>
+    </section>
+
+    <!-- Search Section -->
+    <section class="search">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Enter Pokémon card name (e.g. Pikachu)"
+      />
+      <button id="searchBtn">Search</button>
+    </section>
+
+    <!-- Results -->
+    <section id="results" class="grid"></section>
+
+  </main>
+
+  <!-- Link to JavaScript -->
+  <script src="script.js"></script>
+
+</body>
+</html>
