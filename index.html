@@ -19,17 +19,18 @@
     <a href="index.html">Search</a>
     <a href="collection.html">My Collection</a>
   </nav>
-
-  <button id="muteBtn">🔊</button>
 </header>
 
 <main>
+
+  <!-- Enable Sound Button -->
+  <button id="enableSoundBtn" class="enable-sound">🔊 Enable Sound</button>
 
   <section class="search-hero">
     <h1>Search Pokémon Cards</h1>
 
     <div class="search-box">
-      <input id="searchInput" placeholder="Search cards (e.g. Pikachu)">
+      <input id="searchInput" placeholder="Search (e.g. Pikachu)">
       <button id="searchBtn">Search</button>
     </div>
   </section>
@@ -40,37 +41,46 @@
 
 </main>
 
-<!-- AUDIO -->
+<!-- AUDIO FILES -->
 <audio id="sound-search" src="search.mp3" preload="auto"></audio>
 <audio id="sound-add" src="add.mp3" preload="auto"></audio>
 <audio id="sound-error" src="error.mp3" preload="auto"></audio>
 
 <script>
+/* ---------- AUDIO UNLOCK ---------- */
+const sounds = {
+  search: document.getElementById("sound-search"),
+  add: document.getElementById("sound-add"),
+  error: document.getElementById("sound-error")
+};
+
+let audioUnlocked = false;
+const enableBtn = document.getElementById("enableSoundBtn");
+
+enableBtn.onclick = () => {
+  Object.values(sounds).forEach(sound => {
+    sound.volume = 0;
+    sound.play().then(() => {
+      sound.pause();
+      sound.currentTime = 0;
+      sound.volume = 1;
+    }).catch(()=>{});
+  });
+  audioUnlocked = true;
+  enableBtn.remove();
+};
+
+function playSound(sound) {
+  if (!audioUnlocked) return;
+  sound.currentTime = 0;
+  sound.play().catch(()=>{});
+}
+
+/* ---------- SEARCH + CARDS ---------- */
 const searchBtn = document.getElementById("searchBtn");
 const searchInput = document.getElementById("searchInput");
 const results = document.getElementById("results");
 const loader = document.getElementById("loader");
-
-const soundSearch = document.getElementById("sound-search");
-const soundAdd = document.getElementById("sound-add");
-const soundError = document.getElementById("sound-error");
-const muteBtn = document.getElementById("muteBtn");
-
-let muted = localStorage.getItem("muted") === "true";
-muteBtn.textContent = muted ? "🔇" : "🔊";
-
-function play(sound) {
-  if (!muted) {
-    sound.currentTime = 0;
-    sound.play().catch(()=>{});
-  }
-}
-
-muteBtn.onclick = () => {
-  muted = !muted;
-  localStorage.setItem("muted", muted);
-  muteBtn.textContent = muted ? "🔇" : "🔊";
-};
 
 searchBtn.onclick = search;
 searchInput.addEventListener("keydown", e => {
@@ -81,7 +91,7 @@ async function search() {
   const query = searchInput.value.trim();
   if (!query) return;
 
-  play(soundSearch);
+  playSound(sounds.search);
 
   results.innerHTML = "";
   loader.classList.remove("hidden");
@@ -119,14 +129,14 @@ function addCard(card) {
   const collection = JSON.parse(localStorage.getItem("collection")) || [];
 
   if (collection.some(c => c.id === card.id)) {
-    play(soundError);
+    playSound(sounds.error);
     alert("Already in collection");
     return;
   }
 
   collection.push(card);
   localStorage.setItem("collection", JSON.stringify(collection));
-  play(soundAdd);
+  playSound(sounds.add);
 }
 </script>
 
