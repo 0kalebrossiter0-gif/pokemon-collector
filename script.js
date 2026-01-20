@@ -1,6 +1,6 @@
 const API_URL = "https://api.pokemontcg.io/v2/cards";
 
-// SEARCH CARDS
+// SEARCH
 const searchBtn = document.getElementById("searchBtn");
 
 if (searchBtn) {
@@ -8,7 +8,7 @@ if (searchBtn) {
 }
 
 async function searchCards() {
-  const query = document.getElementById("searchInput").value;
+  const query = document.getElementById("searchInput").value.trim();
   const resultsDiv = document.getElementById("results");
 
   if (!query) {
@@ -30,8 +30,16 @@ async function searchCards() {
     }
 
     data.data.forEach(card => {
-      // FILTER BAD CARDS
-      if (!card.name || !card.images || !card.images.small) return;
+      // 🔒 STRONG FILTER
+      if (
+        card.supertype !== "Pokémon" ||
+        !card.name ||
+        !card.images ||
+        !card.images.small ||
+        card.images.small.toLowerCase().includes("back")
+      ) {
+        return;
+      }
 
       const div = document.createElement("div");
       div.className = "card";
@@ -56,12 +64,13 @@ async function searchCards() {
 
       resultsDiv.appendChild(div);
     });
-  } catch (error) {
+
+  } catch (err) {
     resultsDiv.innerHTML = "Error loading cards.";
   }
 }
 
-// SAVE CARD
+// SAVE
 function saveCard(card) {
   const collection = JSON.parse(localStorage.getItem("collection")) || [];
   collection.push(card);
@@ -69,7 +78,7 @@ function saveCard(card) {
   alert("Card added to collection!");
 }
 
-// LOAD COLLECTION PAGE
+// COLLECTION PAGE
 const collectionDiv = document.getElementById("collection");
 
 if (collectionDiv) {
@@ -80,7 +89,12 @@ if (collectionDiv) {
   }
 
   collection.forEach(card => {
-    if (!card.name || !card.images || !card.images.small) return;
+    if (
+      card.supertype !== "Pokémon" ||
+      !card.name ||
+      !card.images ||
+      !card.images.small
+    ) return;
 
     const div = document.createElement("div");
     div.className = "card";
@@ -101,13 +115,3 @@ if (collectionDiv) {
     collectionDiv.appendChild(div);
   });
 }
-const resetBtn = document.getElementById("resetCollection");
-
-if (resetBtn) {
-  resetBtn.addEventListener("click", () => {
-    localStorage.removeItem("collection");
-    alert("Collection cleared. Refresh the page.");
-  });
-}
-
-
