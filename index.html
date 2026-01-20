@@ -13,10 +13,16 @@
   <!-- Header -->
   <header class="site-header">
     <img src="pokemon-logo.png" alt="Pokémon Logo" class="logo">
+
     <nav>
       <a href="index.html">Search</a>
       <a href="collection.html">My Collection</a>
     </nav>
+
+    <!-- Theme Toggle -->
+    <button id="themeToggle" class="theme-toggle" title="Toggle theme">
+      🌙
+    </button>
   </header>
 
   <!-- Main Content -->
@@ -27,11 +33,12 @@
         type="text"
         id="searchInput"
         placeholder="Search Pokémon cards (e.g. Pikachu)"
+        autocomplete="off"
       >
       <button id="searchBtn">Search</button>
     </section>
 
-    <!-- Results -->
+    <!-- Results Grid -->
     <section>
       <div id="results" class="grid"></div>
     </section>
