@@ -70,4 +70,76 @@
           );
         }
 
-        if (sortSelect.
+        if (sortSelect.value === "priceAsc") {
+          sorted.sort((a, b) =>
+            getPrice(a) - getPrice(b)
+          );
+        }
+
+        if (sortSelect.value === "priceDesc") {
+          sorted.sort((a, b) =>
+            getPrice(b) - getPrice(a)
+          );
+        }
+
+        renderCollection(sorted);
+      });
+
+      function renderCollection(cards) {
+        collectionDiv.innerHTML = "";
+        let totalValue = 0;
+
+        cards.forEach((card) => {
+          const image = card.images?.small || "";
+          const name = card.name || "Unknown Card";
+          const setName = card.set?.name || "Unknown Set";
+          const number = card.number ? `#${card.number}` : "";
+          const price = getPrice(card);
+
+          totalValue += price;
+
+          const cardDiv = document.createElement("div");
+          cardDiv.className = "card";
+
+          cardDiv.innerHTML = `
+            ${image ? `<img src="${image}" alt="${name}">` : ""}
+            <h3>${name}</h3>
+            <p class="details">${setName} ${number}</p>
+            <p class="price">
+              ${price > 0 ? `$${price.toFixed(2)}` : "Price not available"}
+            </p>
+            <button>Remove</button>
+          `;
+
+          cardDiv.querySelector("button").addEventListener("click", () => {
+            removeCard(card.id);
+          });
+
+          collectionDiv.appendChild(cardDiv);
+        });
+
+        totalValueEl.textContent =
+          `Total Collection Value: $${totalValue.toFixed(2)}`;
+      }
+
+      function getPrice(card) {
+        return (
+          card.tcgplayer?.prices?.holofoil?.market ??
+          card.tcgplayer?.prices?.normal?.market ??
+          0
+        );
+      }
+
+      function removeCard(cardId) {
+        collection = collection.filter(c => c.id !== cardId);
+        localStorage.setItem(
+          "collection",
+          JSON.stringify(collection)
+        );
+        renderCollection(collection);
+      }
+    });
+  </script>
+
+</body>
+</html>
