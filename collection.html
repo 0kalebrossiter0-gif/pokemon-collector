@@ -5,7 +5,6 @@
   <title>My Pokémon Collection</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Styles -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -13,18 +12,23 @@
   <!-- Header -->
   <header class="site-header">
     <img src="pokemon-logo.png" alt="Pokémon Logo" class="logo">
-
     <nav>
       <a href="index.html">Search</a>
       <a href="collection.html">My Collection</a>
     </nav>
   </header>
 
-  <!-- Main Content -->
   <main>
-    <!-- Collection Controls -->
+    <!-- Controls -->
     <section class="search" style="align-items:center;">
       <h2 style="color:#ffcb05;">My Collection</h2>
+
+      <input
+        type="text"
+        id="collectionSearch"
+        placeholder="Search your collection..."
+        style="padding:10px;border-radius:8px;"
+      >
 
       <select id="sortSelect" style="padding:10px;border-radius:8px;">
         <option value="default">Sort by</option>
@@ -42,54 +46,73 @@
     </section>
   </main>
 
-  <!-- Script -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const collectionDiv = document.getElementById("collection");
       const totalValueEl = document.getElementById("totalValue");
       const sortSelect = document.getElementById("sortSelect");
+      const searchInput = document.getElementById("collectionSearch");
 
       let collection =
         JSON.parse(localStorage.getItem("collection")) || [];
 
       if (collection.length === 0) {
-        collectionDiv.innerHTML =
-          "<p>Your collection is empty.</p>";
-        totalValueEl.textContent = "";
+        collectionDiv.innerHTML = "<p>Your collection is empty.</p>";
         return;
       }
 
-      renderCollection(collection);
+      let filtered = [...collection];
+
+      renderCollection(filtered);
+
+      searchInput.addEventListener("input", () => {
+        applyFilters();
+      });
 
       sortSelect.addEventListener("change", () => {
-        let sorted = [...collection];
+        applyFilters();
+      });
+
+      function applyFilters() {
+        const term = searchInput.value.toLowerCase();
+
+        filtered = collection.filter(card =>
+          (card.name || "").toLowerCase().includes(term) ||
+          (card.set?.name || "").toLowerCase().includes(term)
+        );
 
         if (sortSelect.value === "name") {
-          sorted.sort((a, b) =>
+          filtered.sort((a, b) =>
             (a.name || "").localeCompare(b.name || "")
           );
         }
 
         if (sortSelect.value === "priceAsc") {
-          sorted.sort((a, b) =>
+          filtered.sort((a, b) =>
             getPrice(a) - getPrice(b)
           );
         }
 
         if (sortSelect.value === "priceDesc") {
-          sorted.sort((a, b) =>
+          filtered.sort((a, b) =>
             getPrice(b) - getPrice(a)
           );
         }
 
-        renderCollection(sorted);
-      });
+        renderCollection(filtered);
+      }
 
       function renderCollection(cards) {
         collectionDiv.innerHTML = "";
         let totalValue = 0;
 
-        cards.forEach((card) => {
+        if (cards.length === 0) {
+          collectionDiv.innerHTML = "<p>No cards found.</p>";
+          totalValueEl.textContent = "";
+          return;
+        }
+
+        cards.forEach(card => {
           const image = card.images?.small || "";
           const name = card.name || "Unknown Card";
           const setName = card.set?.name || "Unknown Set";
@@ -136,7 +159,7 @@
           "collection",
           JSON.stringify(collection)
         );
-        renderCollection(collection);
+        applyFilters();
       }
     });
   </script>
