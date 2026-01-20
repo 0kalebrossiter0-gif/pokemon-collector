@@ -30,7 +30,7 @@ nav a {
   font-size: 12px;
 }
 
-/* ENABLE SOUND */
+/* ENABLE SOUND BUTTON */
 .enable-sound {
   position: fixed;
   bottom: 20px;
@@ -172,5 +172,7 @@ nav a {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
