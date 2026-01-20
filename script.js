@@ -1,7 +1,7 @@
 const API_URL = "https://api.pokemontcg.io/v2/cards";
 
-// SEARCH
 const searchBtn = document.getElementById("searchBtn");
+const resultsDiv = document.getElementById("results");
 
 if (searchBtn) {
   searchBtn.addEventListener("click", searchCards);
@@ -9,37 +9,24 @@ if (searchBtn) {
 
 async function searchCards() {
   const query = document.getElementById("searchInput").value.trim();
-  const resultsDiv = document.getElementById("results");
 
   if (!query) {
-    resultsDiv.innerHTML = "Please enter a card name.";
+    resultsDiv.innerHTML = "Please enter a Pokémon name.";
     return;
   }
 
   resultsDiv.innerHTML = "Loading...";
 
   try {
-    const response = await fetch(`${API_URL}?q=name:${query}`);
-    const data = await response.json();
-
+    const res = await fetch(`${API_URL}?q=name:${query}&pageSize=40`);
+    const data = await res.json();
     resultsDiv.innerHTML = "";
 
-    if (!data.data || data.data.length === 0) {
-      resultsDiv.innerHTML = "No cards found.";
-      return;
-    }
-
     data.data.forEach(card => {
-      // 🔒 STRONG FILTER
-      if (
-        card.supertype !== "Pokémon" ||
-        !card.name ||
-        !card.images ||
-        !card.images.small ||
-        card.images.small.toLowerCase().includes("back")
-      ) {
-        return;
-      }
+      const imageUrl = card.images?.small;
+
+      // Only show real front images
+      if (!imageUrl || imageUrl.toLowerCase().includes("back")) return;
 
       const div = document.createElement("div");
       div.className = "card";
@@ -50,11 +37,9 @@ async function searchCards() {
         null;
 
       div.innerHTML = `
-        <img src="${card.images.small}" alt="${card.name}" />
+        <img src="${imageUrl}" alt="${card.name}" />
         <h3>${card.name}</h3>
-        <p class="price">
-          ${price ? `$${price}` : "No market price"}
-        </p>
+        <p class="price">${price ? `$${price}` : "No market price"}</p>
         <button>Add to Collection</button>
       `;
 
@@ -70,48 +55,9 @@ async function searchCards() {
   }
 }
 
-// SAVE
 function saveCard(card) {
   const collection = JSON.parse(localStorage.getItem("collection")) || [];
   collection.push(card);
   localStorage.setItem("collection", JSON.stringify(collection));
-  alert("Card added to collection!");
-}
-
-// COLLECTION PAGE
-const collectionDiv = document.getElementById("collection");
-
-if (collectionDiv) {
-  const collection = JSON.parse(localStorage.getItem("collection")) || [];
-
-  if (collection.length === 0) {
-    collectionDiv.innerHTML = "No cards in your collection yet.";
-  }
-
-  collection.forEach(card => {
-    if (
-      card.supertype !== "Pokémon" ||
-      !card.name ||
-      !card.images ||
-      !card.images.small
-    ) return;
-
-    const div = document.createElement("div");
-    div.className = "card";
-
-    const price =
-      card.tcgplayer?.prices?.holofoil?.market ??
-      card.tcgplayer?.prices?.normal?.market ??
-      null;
-
-    div.innerHTML = `
-      <img src="${card.images.small}" alt="${card.name}" />
-      <h3>${card.name}</h3>
-      <p class="price">
-        ${price ? `$${price}` : "No market price"}
-      </p>
-    `;
-
-    collectionDiv.appendChild(div);
-  });
+  alert("Added to collection!");
 }
