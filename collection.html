@@ -19,6 +19,7 @@
   </header>
 
   <main>
+
     <!-- Controls -->
     <section class="search" style="align-items:center; gap:12px;">
       <h2 style="color:#ffcb05;">My Collection</h2>
@@ -45,23 +46,35 @@
         <option value="priceAsc">Price (Low → High)</option>
         <option value="priceDesc">Price (High → Low)</option>
       </select>
+    </section>
 
-      <p id="totalValue" style="font-weight:700;"></p>
+    <!-- Stats Panel -->
+    <section class="search" style="gap:20px;">
+      <p id="statCount"></p>
+      <p id="statTotal"></p>
+      <p id="statAverage"></p>
+      <p id="statTop"></p>
     </section>
 
     <!-- Collection Grid -->
     <section>
       <div id="collection" class="grid"></div>
     </section>
+
   </main>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const collectionDiv = document.getElementById("collection");
-      const totalValueEl = document.getElementById("totalValue");
-      const sortSelect = document.getElementById("sortSelect");
+
       const searchInput = document.getElementById("collectionSearch");
       const rarityFilter = document.getElementById("rarityFilter");
+      const sortSelect = document.getElementById("sortSelect");
+
+      const statCount = document.getElementById("statCount");
+      const statTotal = document.getElementById("statTotal");
+      const statAverage = document.getElementById("statAverage");
+      const statTop = document.getElementById("statTop");
 
       let collection =
         JSON.parse(localStorage.getItem("collection")) || [];
@@ -71,109 +84,19 @@
         return;
       }
 
-      let filtered = [...collection];
       applyFilters();
 
       searchInput.addEventListener("input", applyFilters);
-      sortSelect.addEventListener("change", applyFilters);
       rarityFilter.addEventListener("change", applyFilters);
+      sortSelect.addEventListener("change", applyFilters);
 
       function applyFilters() {
         const term = searchInput.value.toLowerCase();
         const rarity = rarityFilter.value;
 
-        filtered = collection.filter(card => {
+        let filtered = collection.filter(card => {
           const matchesText =
             (card.name || "").toLowerCase().includes(term) ||
             (card.set?.name || "").toLowerCase().includes(term);
 
-          const matchesRarity =
-            rarity === "all" ||
-            (card.rarity && card.rarity === rarity);
-
-          return matchesText && matchesRarity;
-        });
-
-        if (sortSelect.value === "name") {
-          filtered.sort((a, b) =>
-            (a.name || "").localeCompare(b.name || "")
-          );
-        }
-
-        if (sortSelect.value === "priceAsc") {
-          filtered.sort((a, b) => getPrice(a) - getPrice(b));
-        }
-
-        if (sortSelect.value === "priceDesc") {
-          filtered.sort((a, b) => getPrice(b) - getPrice(a));
-        }
-
-        renderCollection(filtered);
-      }
-
-      function renderCollection(cards) {
-        collectionDiv.innerHTML = "";
-        let totalValue = 0;
-
-        if (cards.length === 0) {
-          collectionDiv.innerHTML = "<p>No cards match your filters.</p>";
-          totalValueEl.textContent = "";
-          return;
-        }
-
-        cards.forEach(card => {
-          const image = card.images?.small || "";
-          const name = card.name || "Unknown Card";
-          const setName = card.set?.name || "Unknown Set";
-          const number = card.number ? `#${card.number}` : "";
-          const rarity = card.rarity || "Unknown";
-          const price = getPrice(card);
-
-          totalValue += price;
-
-          const cardDiv = document.createElement("div");
-          cardDiv.className = "card";
-
-          cardDiv.innerHTML = `
-            ${image ? `<img src="${image}" alt="${name}">` : ""}
-            <h3>${name}</h3>
-            <p class="details">${setName} ${number}</p>
-            <p class="details"><strong>Rarity:</strong> ${rarity}</p>
-            <p class="price">
-              ${price > 0 ? `$${price.toFixed(2)}` : "Price not available"}
-            </p>
-            <button>Remove</button>
-          `;
-
-          cardDiv.querySelector("button").addEventListener("click", () => {
-            removeCard(card.id);
-          });
-
-          collectionDiv.appendChild(cardDiv);
-        });
-
-        totalValueEl.textContent =
-          `Total Collection Value: $${totalValue.toFixed(2)}`;
-      }
-
-      function getPrice(card) {
-        return (
-          card.tcgplayer?.prices?.holofoil?.market ??
-          card.tcgplayer?.prices?.normal?.market ??
-          0
-        );
-      }
-
-      function removeCard(cardId) {
-        collection = collection.filter(c => c.id !== cardId);
-        localStorage.setItem(
-          "collection",
-          JSON.stringify(collection)
-        );
-        applyFilters();
-      }
-    });
-  </script>
-
-</body>
-</html>
+          c
