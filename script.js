@@ -24,24 +24,29 @@ async function searchCards() {
 
     resultsDiv.innerHTML = "";
 
-    if (data.data.length === 0) {
+    if (!data.data || data.data.length === 0) {
       resultsDiv.innerHTML = "No cards found.";
       return;
     }
 
     data.data.forEach(card => {
+      // FILTER BAD CARDS
+      if (!card.name || !card.images || !card.images.small) return;
+
       const div = document.createElement("div");
       div.className = "card";
 
       const price =
-        card.tcgplayer?.prices?.holofoil?.market ||
-        card.tcgplayer?.prices?.normal?.market ||
-        "N/A";
+        card.tcgplayer?.prices?.holofoil?.market ??
+        card.tcgplayer?.prices?.normal?.market ??
+        null;
 
       div.innerHTML = `
         <img src="${card.images.small}" alt="${card.name}" />
         <h3>${card.name}</h3>
-        <p class="price">$${price}</p>
+        <p class="price">
+          ${price ? `$${price}` : "No market price"}
+        </p>
         <button>Add to Collection</button>
       `;
 
@@ -56,7 +61,7 @@ async function searchCards() {
   }
 }
 
-// SAVE CARD TO LOCAL STORAGE
+// SAVE CARD
 function saveCard(card) {
   const collection = JSON.parse(localStorage.getItem("collection")) || [];
   collection.push(card);
@@ -75,20 +80,25 @@ if (collectionDiv) {
   }
 
   collection.forEach(card => {
+    if (!card.name || !card.images || !card.images.small) return;
+
     const div = document.createElement("div");
     div.className = "card";
 
     const price =
-      card.tcgplayer?.prices?.holofoil?.market ||
-      card.tcgplayer?.prices?.normal?.market ||
-      "N/A";
+      card.tcgplayer?.prices?.holofoil?.market ??
+      card.tcgplayer?.prices?.normal?.market ??
+      null;
 
     div.innerHTML = `
       <img src="${card.images.small}" alt="${card.name}" />
       <h3>${card.name}</h3>
-      <p class="price">$${price}</p>
+      <p class="price">
+        ${price ? `$${price}` : "No market price"}
+      </p>
     `;
 
     collectionDiv.appendChild(div);
   });
 }
+
