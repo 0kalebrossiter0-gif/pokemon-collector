@@ -1,179 +1,140 @@
-/* =========================
-   Reset
-   ========================= */
+/* Reset */
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-/* =========================
-   Theme Variables
-   ========================= */
-:root {
-  --bg: #0f172a;
-  --surface: #020617;
-  --card: #f9fafb;
-  --text: #e5e7eb;
-  --text-dark: #1f2937;
-  --primary: #2a75bb;
-  --primary-dark: #1c4d8c;
-  --accent: #ffcb05;
-}
-
-/* Light mode */
-body.light {
-  --bg: #f3f4f6;
-  --surface: #ffffff;
-  --card: #ffffff;
-  --text: #1f2937;
-}
-
-/* =========================
-   Base
-   ========================= */
+/* Background */
 body {
-  font-family: "Segoe UI", Arial, sans-serif;
-  background-color: var(--bg);
-  color: var(--text);
-  transition: background-color 0.3s, color 0.3s;
+  background: radial-gradient(circle at top, #1e3c72, #0b1020);
+  color: #ffffff;
+  min-height: 100vh;
 }
 
-/* =========================
-   Header
-   ========================= */
+/* Header */
 .site-header {
-  background: linear-gradient(90deg, var(--primary), var(--primary-dark));
-  padding: 14px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  padding: 15px 30px;
+  background: #0b1020;
+  border-bottom: 3px solid #ffcb05;
 }
 
 .logo {
-  height: 48px;
+  height: 50px;
 }
 
-.site-header nav a {
-  color: var(--accent);
+nav a {
+  color: #ffcb05;
+  margin-left: 20px;
   text-decoration: none;
-  font-weight: 700;
-  margin-left: 18px;
+  font-weight: bold;
 }
 
-.theme-toggle {
-  margin-left: 18px;
-  background: var(--accent);
-  border: none;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  cursor: pointer;
-  font-size: 16px;
+nav a:hover {
+  text-decoration: underline;
 }
 
-/* =========================
-   Layout
-   ========================= */
+/* Main layout */
 main {
   max-width: 1200px;
-  margin: 32px auto;
-  padding: 0 20px;
+  margin: 0 auto;
+  padding: 30px;
 }
 
-/* =========================
-   Search
-   ========================= */
+/* Search & Controls */
 .search {
   display: flex;
-  gap: 12px;
   flex-wrap: wrap;
-  background-color: var(--surface);
-  padding: 18px;
-  border-radius: 14px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  gap: 15px;
+  align-items: center;
+  margin-bottom: 25px;
 }
 
-.search input {
-  padding: 12px;
-  font-size: 16px;
-  border-radius: 8px;
-  border: 2px solid var(--primary);
-  background-color: transparent;
-  color: var(--text);
+.search h2 {
+  width: 100%;
+  color: #ffcb05;
 }
 
-.search button {
-  padding: 12px 20px;
+.search input,
+.search select {
+  padding: 10px 12px;
   border-radius: 8px;
-  background: var(--accent);
   border: none;
-  font-weight: 700;
-  cursor: pointer;
+  font-size: 14px;
 }
 
-/* =========================
-   Grid
-   ========================= */
+/* Stats panel */
+.stats {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 15px 20px;
+  margin-bottom: 25px;
+}
+
+.stats p {
+  margin: 6px 0;
+  font-weight: bold;
+}
+
+/* Grid */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-  gap: 22px;
-  margin-top: 22px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
 }
 
-/* =========================
-   Card
-   ========================= */
+/* Cards */
 .card {
-  background-color: var(--card);
-  color: var(--text-dark);
-  border-radius: 18px;
-  padding: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 15px;
   text-align: center;
-  border: 3px solid var(--accent);
-  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.4);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease;
 }
 
 .card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 0 25px rgba(255, 203, 5, 0.6);
+  transform: translateY(-5px);
 }
 
 .card img {
   width: 100%;
-  border-radius: 14px;
+  border-radius: 8px;
+  margin-bottom: 10px;
 }
 
-/* =========================
-   Text
-   ========================= */
+.card h3 {
+  font-size: 15px;
+  margin-bottom: 5px;
+}
+
 .details {
   font-size: 13px;
-  color: #4b5563;
+  opacity: 0.85;
 }
 
 .price {
-  font-weight: 700;
-  color: var(--primary-dark);
+  margin: 8px 0;
+  font-weight: bold;
+  color: #ffcb05;
 }
 
-/* =========================
-   Rarity Badges
-   ========================= */
-.badge {
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 700;
-  margin-bottom: 6px;
+/* Delete button */
+.remove-btn {
+  margin-top: 10px;
+  padding: 8px;
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  background: #d62828;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
 }
 
-.common { background: #9ca3af; color: white; }
-.uncommon { background: #22c55e; color: white; }
-.rare { background: #3b82f6; color: white; }
-.ultra { background: #a855f7; color: white; }
-.secret { background: #f59e0b; color: black; }
+.remove-btn:hover {
+  background: #b51f1f;
+}
