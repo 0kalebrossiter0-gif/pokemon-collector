@@ -4,221 +4,112 @@
   <meta charset="UTF-8">
   <title>My Pokémon Collection</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Header -->
-  <header class="site-header">
-    <img src="pokemon-logo.png" alt="Pokémon Logo" class="logo">
-    <nav>
-      <a href="index.html">Search</a>
-      <a href="collection.html">My Collection</a>
-    </nav>
-  </header>
+<header class="site-header">
+  <img src="pokemon-logo.png" class="logo" alt="Pokémon Logo">
+  <nav>
+    <a href="index.html">Search</a>
+    <a href="collection.html">My Collection</a>
+  </nav>
+</header>
 
-  <main>
+<main>
 
-    <!-- Controls -->
-    <section class="search">
-      <h2>My Collection</h2>
+  <!-- Controls -->
+  <section class="controls">
+    <h2>My Collection</h2>
 
-      <input
-        type="text"
-        id="collectionSearch"
-        placeholder="Search your collection..."
-      >
+    <input id="searchInput" placeholder="Search cards...">
 
-      <select id="rarityFilter">
-        <option value="all">All Rarities</option>
-        <option value="Common">Common</option>
-        <option value="Uncommon">Uncommon</option>
-        <option value="Rare">Rare</option>
-        <option value="Ultra Rare">Ultra Rare</option>
-      </select>
+    <select id="rarityFilter">
+      <option value="all">All Rarities</option>
+      <option value="Common">Common</option>
+      <option value="Uncommon">Uncommon</option>
+      <option value="Rare">Rare</option>
+      <option value="Ultra Rare">Ultra Rare</option>
+    </select>
 
-      <select id="sortSelect">
-        <option value="default">Sort by</option>
-        <option value="name">Name (A–Z)</option>
-        <option value="priceAsc">Price (Low → High)</option>
-        <option value="priceDesc">Price (High → Low)</option>
-      </select>
-    </section>
+    <select id="sortSelect">
+      <option value="default">Sort by</option>
+      <option value="name">Name (A–Z)</option>
+      <option value="priceAsc">Price (Low → High)</option>
+      <option value="priceDesc">Price (High → Low)</option>
+    </select>
+  </section>
 
-    <!-- Stats Panel -->
-    <section class="stats">
-      <p id="statCount"></p>
-      <p id="statTotal"></p>
-      <p id="statAverage"></p>
-      <p id="statTop"></p>
-    </section>
+  <!-- Stats -->
+  <section class="stats">
+    <p id="statCount"></p>
+    <p id="statTotal"></p>
+    <p id="statAvg"></p>
+    <p id="statTop"></p>
+  </section>
 
-    <!-- Collection Grid -->
-    <section>
-      <div id="collection" class="grid"></div>
-    </section>
+  <!-- Grid -->
+  <section>
+    <div id="grid" class="grid"></div>
+  </section>
 
-  </main>
+</main>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const collectionDiv = document.getElementById("collection");
-      const searchInput = document.getElementById("collectionSearch");
-      const rarityFilter = document.getElementById("rarityFilter");
-      const sortSelect = document.getElementById("sortSelect");
+<script>
+const grid = document.getElementById("grid");
+const searchInput = document.getElementById("searchInput");
+const rarityFilter = document.getElementById("rarityFilter");
+const sortSelect = document.getElementById("sortSelect");
 
-      const statCount = document.getElementById("statCount");
-      const statTotal = document.getElementById("statTotal");
-      const statAverage = document.getElementById("statAverage");
-      const statTop = document.getElementById("statTop");
+const statCount = document.getElementById("statCount");
+const statTotal = document.getElementById("statTotal");
+const statAvg = document.getElementById("statAvg");
+const statTop = document.getElementById("statTop");
 
-      let collection =
-        JSON.parse(localStorage.getItem("collection")) || [];
+let collection = JSON.parse(localStorage.getItem("collection")) || [];
 
-      if (collection.length === 0) {
-        collectionDiv.innerHTML = "<p>Your collection is empty.</p>";
-        return;
-      }
+searchInput.oninput =
+rarityFilter.onchange =
+sortSelect.onchange = render;
 
-      applyFilters();
+function price(card) {
+  return (
+    card.tcgplayer?.prices?.holofoil?.market ??
+    card.tcgplayer?.prices?.normal?.market ??
+    0
+  );
+}
 
-      searchInput.addEventListener("input", applyFilters);
-      rarityFilter.addEventListener("change", applyFilters);
-      sortSelect.addEventListener("change", applyFilters);
+function render() {
+  grid.innerHTML = "";
 
-      function applyFilters() {
-        const term = searchInput.value.toLowerCase();
-        const rarity = rarityFilter.value;
+  let filtered = collection.filter(c => {
+    const text = searchInput.value.toLowerCase();
+    const matchesText =
+      (c.name || "").toLowerCase().includes(text) ||
+      (c.set?.name || "").toLowerCase().includes(text);
 
-        let filtered = collection.filter(card => {
-          const name = (card.name || "").toLowerCase();
-          const set = (card.set?.name || "").toLowerCase();
-          const cardRarity = card.rarity || "Unknown";
+    const matchesRarity =
+      rarityFilter.value === "all" ||
+      c.rarity === rarityFilter.value;
 
-          const matchesText =
-            name.includes(term) || set.includes(term);
+    return matchesText && matchesRarity;
+  });
 
-          const matchesRarity =
-            rarity === "all" || cardRarity === rarity;
+  if (sortSelect.value === "name")
+    filtered.sort((a,b)=>a.name.localeCompare(b.name));
+  if (sortSelect.value === "priceAsc")
+    filtered.sort((a,b)=>price(a)-price(b));
+  if (sortSelect.value === "priceDesc")
+    filtered.sort((a,b)=>price(b)-price(a));
 
-          return matchesText && matchesRarity;
-        });
+  updateStats(filtered);
 
-        if (sortSelect.value === "name") {
-          filtered.sort((a, b) =>
-            (a.name || "").localeCompare(b.name || "")
-          );
-        }
+  if (!filtered.length) {
+    grid.innerHTML = "<p>No cards found.</p>";
+    return;
+  }
 
-        if (sortSelect.value === "priceAsc") {
-          filtered.sort((a, b) => getPrice(a) - getPrice(b));
-        }
-
-        if (sortSelect.value === "priceDesc") {
-          filtered.sort((a, b) => getPrice(b) - getPrice(a));
-        }
-
-        renderCollection(filtered);
-        updateStats(filtered);
-      }
-
-      function renderCollection(cards) {
-        collectionDiv.innerHTML = "";
-
-        if (cards.length === 0) {
-          collectionDiv.innerHTML =
-            "<p>No cards match your filters.</p>";
-          clearStats();
-          return;
-        }
-
-        cards.forEach(card => {
-          const image = card.images?.small || "";
-          const price = getPrice(card);
-
-          const cardDiv = document.createElement("div");
-          cardDiv.className = "card";
-
- cardDiv.innerHTML = `
-  <div class="card-inner">
-    <div class="card-front">
-      ${image ? `<img src="${image}" alt="${card.name}">` : ""}
-    </div>
-
-    <div class="card-back">
-      <h3>${card.name || "Unknown Card"}</h3>
-      <p class="details">${card.set?.name || "Unknown Set"}</p>
-      <p class="details"><strong>Rarity:</strong> ${card.rarity || "Unknown"}</p>
-      <p class="price">
-        ${price > 0 ? `$${price.toFixed(2)}` : "Price not available"}
-      </p>
-      <button class="remove-btn">Delete</button>
-    </div>
-  </div>
-`;
-
-          cardDiv
-            .querySelector(".remove-btn")
-            .addEventListener("click", () => {
-              removeCard(card.id);
-            });
-
-          collectionDiv.appendChild(cardDiv);
-        });
-      }
-
-      function updateStats(cards) {
-        const prices = cards.map(getPrice).filter(p => p > 0);
-
-        const total = prices.reduce((a, b) => a + b, 0);
-        const average = prices.length ? total / prices.length : 0;
-
-        let topCard = null;
-        let topPrice = 0;
-
-        cards.forEach(card => {
-          const price = getPrice(card);
-          if (price > topPrice) {
-            topPrice = price;
-            topCard = card;
-          }
-        });
-
-        statCount.textContent = `Cards: ${cards.length}`;
-        statTotal.textContent = `Total Value: $${total.toFixed(2)}`;
-        statAverage.textContent =
-          `Average Value: $${average.toFixed(2)}`;
-        statTop.textContent = topCard
-          ? `Most Valuable: ${topCard.name} ($${topPrice.toFixed(2)})`
-          : "Most Valuable: N/A";
-      }
-
-      function clearStats() {
-        statCount.textContent = "";
-        statTotal.textContent = "";
-        statAverage.textContent = "";
-        statTop.textContent = "";
-      }
-
-      function getPrice(card) {
-        return (
-          card.tcgplayer?.prices?.holofoil?.market ??
-          card.tcgplayer?.prices?.normal?.market ??
-          0
-        );
-      }
-
-      function removeCard(cardId) {
-        collection = collection.filter(c => c.id !== cardId);
-        localStorage.setItem(
-          "collection",
-          JSON.stringify(collection)
-        );
-        applyFilters();
-      }
-    });
-  </script>
-
-</body>
-</html>
+  filtered.forEach(card => {
+    const el = document.createElement("div");
+    el.className =
