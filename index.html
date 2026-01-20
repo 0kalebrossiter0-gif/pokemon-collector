@@ -5,7 +5,7 @@
   <title>Pokémon Card Collector</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Pixel Font -->
+  <!-- Pokémon-style pixel font -->
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
@@ -23,7 +23,7 @@
 
 <main>
 
-  <!-- Enable Sound Button -->
+  <!-- 🔊 Enable Sound (Chrome requirement) -->
   <button id="enableSoundBtn" class="enable-sound">🔊 Enable Sound</button>
 
   <section class="search-hero">
@@ -36,7 +36,6 @@
   </section>
 
   <div id="loader" class="pokeball-loader hidden"></div>
-
   <div id="results" class="grid"></div>
 
 </main>
@@ -47,36 +46,57 @@
 <audio id="sound-error" src="error.mp3" preload="auto"></audio>
 
 <script>
-/* ---------- AUDIO UNLOCK ---------- */
+/* =====================================================
+   🔊 AUDIO — CHROME-SAFE (WEB AUDIO API UNLOCK)
+===================================================== */
+
+let audioContext;
+let audioUnlocked = false;
+
+function unlockAudioContext() {
+  if (!audioContext) {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioContext.state === "suspended") {
+    audioContext.resume();
+  }
+}
+
 const sounds = {
   search: document.getElementById("sound-search"),
   add: document.getElementById("sound-add"),
   error: document.getElementById("sound-error")
 };
 
-let audioUnlocked = false;
 const enableBtn = document.getElementById("enableSoundBtn");
 
 enableBtn.onclick = () => {
+  unlockAudioContext();
+
   Object.values(sounds).forEach(sound => {
-    sound.volume = 0;
+    sound.muted = false;
+    sound.volume = 1;
     sound.play().then(() => {
       sound.pause();
       sound.currentTime = 0;
-      sound.volume = 1;
-    }).catch(()=>{});
+    }).catch(() => {});
   });
+
   audioUnlocked = true;
   enableBtn.remove();
 };
 
 function playSound(sound) {
   if (!audioUnlocked) return;
+  unlockAudioContext();
   sound.currentTime = 0;
-  sound.play().catch(()=>{});
+  sound.play().catch(() => {});
 }
 
-/* ---------- SEARCH + CARDS ---------- */
+/* =====================================================
+   🔍 SEARCH + CARD LOGIC
+===================================================== */
+
 const searchBtn = document.getElementById("searchBtn");
 const searchInput = document.getElementById("searchInput");
 const results = document.getElementById("results");
