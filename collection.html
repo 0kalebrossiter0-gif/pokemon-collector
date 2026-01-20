@@ -22,9 +22,17 @@
 
   <!-- Main Content -->
   <main>
-    <!-- Collection Summary -->
-    <section class="search">
+    <!-- Collection Controls -->
+    <section class="search" style="align-items:center;">
       <h2 style="color:#ffcb05;">My Collection</h2>
+
+      <select id="sortSelect" style="padding:10px;border-radius:8px;">
+        <option value="default">Sort by</option>
+        <option value="name">Name (A–Z)</option>
+        <option value="priceAsc">Price (Low → High)</option>
+        <option value="priceDesc">Price (High → Low)</option>
+      </select>
+
       <p id="totalValue" style="font-weight:700;"></p>
     </section>
 
@@ -34,11 +42,12 @@
     </section>
   </main>
 
-  <!-- Collection Script -->
+  <!-- Script -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const collectionDiv = document.getElementById("collection");
       const totalValueEl = document.getElementById("totalValue");
+      const sortSelect = document.getElementById("sortSelect");
 
       let collection =
         JSON.parse(localStorage.getItem("collection")) || [];
@@ -50,33 +59,15 @@
         return;
       }
 
-      let totalValue = 0;
-      collectionDiv.innerHTML = "";
+      renderCollection(collection);
 
-      collection.forEach((card, index) => {
-        const image = card.images?.small || "";
-        const name = card.name || "Unknown Card";
-        const setName = card.set?.name || "Unknown Set";
-        const number = card.number ? `#${card.number}` : "";
+      sortSelect.addEventListener("change", () => {
+        let sorted = [...collection];
 
-        const price =
-          card.tcgplayer?.prices?.holofoil?.market ??
-          card.tcgplayer?.prices?.normal?.market ??
-          0;
+        if (sortSelect.value === "name") {
+          sorted.sort((a, b) =>
+            (a.name || "").localeCompare(b.name || "")
+          );
+        }
 
-        totalValue += price;
-
-        const cardDiv = document.createElement("div");
-        cardDiv.className = "card";
-
-        cardDiv.innerHTML = `
-          ${image ? `<img src="${image}" alt="${name}">` : ""}
-          <h3>${name}</h3>
-          <p class="details">${setName} ${number}</p>
-          <p class="price">
-            ${price > 0 ? `$${price.toFixed(2)}` : "Price not available"}
-          </p>
-          <button>Remove</button>
-        `;
-
-        cardDiv.querySelector("button").addEventListener("click", () =>
+        if (sortSelect.
