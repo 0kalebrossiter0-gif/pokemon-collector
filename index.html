@@ -5,46 +5,100 @@
   <title>Pokémon Card Collector</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Styles -->
+  <!-- Pixel / Pokémon-style font -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Header -->
-  <header class="site-header">
-    <img src="pokemon-logo.png" alt="Pokémon Logo" class="logo">
+<header class="site-header">
+  <img src="pokemon-logo.png" class="logo" alt="Pokémon Logo">
+  <nav>
+    <a href="index.html">Search</a>
+    <a href="collection.html">My Collection</a>
+  </nav>
+</header>
 
-    <nav>
-      <a href="index.html">Search</a>
-      <a href="collection.html">My Collection</a>
-    </nav>
+<main>
 
-    <!-- Theme Toggle -->
-    <button id="themeToggle" class="theme-toggle" title="Toggle theme">
-      🌙
-    </button>
-  </header>
+  <!-- CENTERED SEARCH -->
+  <section class="search-hero">
+    <h1>Search Pokémon Cards</h1>
 
-  <!-- Main Content -->
-  <main>
-    <!-- Search Section -->
-    <section class="search">
+    <div class="search-box">
       <input
-        type="text"
         id="searchInput"
-        placeholder="Search Pokémon cards (e.g. Pikachu)"
-        autocomplete="off"
+        type="text"
+        placeholder="Search cards (e.g. Pikachu)"
       >
       <button id="searchBtn">Search</button>
-    </section>
+    </div>
+  </section>
 
-    <!-- Results Grid -->
-    <section>
-      <div id="results" class="grid"></div>
-    </section>
-  </main>
+  <section>
+    <div id="results" class="grid"></div>
+  </section>
 
-  <!-- Script -->
-  <script src="script.js"></script>
+</main>
+
+<script>
+const searchBtn = document.getElementById("searchBtn");
+const searchInput = document.getElementById("searchInput");
+const results = document.getElementById("results");
+
+searchBtn.onclick = search;
+searchInput.addEventListener("keydown", e => {
+  if (e.key === "Enter") search();
+});
+
+async function search() {
+  const query = searchInput.value.trim();
+  if (!query) return;
+
+  results.innerHTML = "<p>Loading...</p>";
+
+  const res = await fetch(
+    `https://api.pokemontcg.io/v2/cards?q=name:${query}`
+  );
+  const data = await res.json();
+
+  results.innerHTML = "";
+
+  data.data.forEach(card => {
+    const div = document.createElement("div");
+    div.className = "card";
+
+    div.innerHTML = `
+      <div class="card-inner">
+        <div class="card-front">
+          <img src="${card.images.small}">
+        </div>
+        <div class="card-back">
+          <h3>${card.name}</h3>
+          <p>${card.set.name}</p>
+          <button onclick='addCard(${JSON.stringify(card)})'>Add</button>
+        </div>
+      </div>
+    `;
+
+    results.appendChild(div);
+  });
+}
+
+function addCard(card) {
+  const collection = JSON.parse(localStorage.getItem("collection")) || [];
+
+  if (collection.some(c => c.id === card.id)) {
+    alert("Card already in collection");
+    return;
+  }
+
+  collection.push(card);
+  localStorage.setItem("collection", JSON.stringify(collection));
+  alert("Added to collection!");
+}
+</script>
+
 </body>
 </html>
