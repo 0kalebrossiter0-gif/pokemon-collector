@@ -61,6 +61,25 @@ input, select {
   margin-bottom: 25px;
 }
 
+/* Chart */
+.chart-section {
+  background: rgba(255,255,255,0.08);
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+
+.chart-section h3 {
+  color: #ffcb05;
+  margin-bottom: 10px;
+}
+
+canvas {
+  width: 100%;
+  background: rgba(0,0,0,0.4);
+  border-radius: 8px;
+}
+
 /* Grid */
 .grid {
   display: grid;
@@ -135,7 +154,7 @@ button:hover {
   background: #b51f1f;
 }
 
-/* Disable flip on touch */
+/* Disable flip on touch devices */
 @media (hover: none) {
   .card:hover .card-inner {
     transform: none;
