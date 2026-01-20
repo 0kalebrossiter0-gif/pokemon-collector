@@ -1,105 +1,153 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const API_URL = "https://api.pokemontcg.io/v2/cards";
+// ==========================
+// 🔊 AUDIO SYSTEM (WAV)
+// ==========================
+let soundEnabled = false;
 
-  const searchBtn = document.getElementById("searchBtn");
-  const searchInput = document.getElementById("searchInput");
+const sounds = {
+  search: new Audio("search.wav"),
+  add: new Audio("add.wav"),
+  error: new Audio("error.wav")
+};
+
+// Enable sound after first user interaction (Chrome requirement)
+document.addEventListener("click", () => {
+  soundEnabled = true;
+}, { once: true });
+
+function playSound(name) {
+  if (!soundEnabled) return;
+  if (!sounds[name]) return;
+  sounds[name].currentTime = 0;
+  sounds[name].play().catch(() => {});
+}
+
+// ==========================
+// 📦 STORAGE
+// ==========================
+function getCollection() {
+  return JSON.parse(localStorage.getItem("collection")) || [];
+}
+
+function saveCollection(cards) {
+  localStorage.setItem("collection", JSON.stringify(cards));
+}
+
+// ==========================
+// 🔍 SEARCH CARDS
+// ==========================
+async function searchCards() {
+  const query = document.getElementById("searchInput").value.trim();
   const resultsDiv = document.getElementById("results");
-  const themeToggle = document.getElementById("themeToggle");
 
-  if (!searchBtn || !searchInput || !resultsDiv) return;
+  resultsDiv.innerHTML = "";
+  if (!query) return;
 
-  /* =========================
-     Theme Toggle
-     ========================= */
-  if (themeToggle) {
-    themeToggle.addEventListener("click", () => {
-      document.body.classList.toggle("light");
-      themeToggle.textContent =
-        document.body.classList.contains("light") ? "☀️" : "🌙";
+  playSound("search");
+
+  try {
+    const res = await fetch(
+      `https://api.pokemontcg.io/v2/cards?q=name:${query}`
+    );
+    const data = await res.json();
+
+    data.data.forEach(card => {
+      if (!card.images?.small) return;
+
+      const cardDiv = document.createElement("div");
+      cardDiv.className = "card";
+
+      const price =
+        card.cardmarket?.prices?.averageSellPrice ??
+        card.tcgplayer?.prices?.holofoil?.market ??
+        "N/A";
+
+      cardDiv.innerHTML = `
+        <img src="${card.images.small}" alt="${card.name}">
+        <h3>${card.name}</h3>
+        <p class="price">$${price}</p>
+        <button>Add to Collection</button>
+      `;
+
+      cardDiv.querySelector("button").onclick = () => addToCollection(card);
+      resultsDiv.appendChild(cardDiv);
     });
+
+  } catch (err) {
+    console.error(err);
+    playSound("error");
+  }
+}
+
+// ==========================
+// ➕ ADD TO COLLECTION
+// ==========================
+function addToCollection(card) {
+  const collection = getCollection();
+
+  // Prevent duplicates
+  if (collection.some(c => c.id === card.id)) {
+    playSound("error");
+    alert("This card is already in your collection.");
+    return;
   }
 
-  /* =========================
-     Search Events
-     ========================= */
-  searchBtn.addEventListener("click", searchCards);
-  searchInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") searchCards();
+  collection.push({
+    id: card.id,
+    name: card.name,
+    image: card.images.small,
+    rarity: card.rarity || "Unknown",
+    price:
+      card.cardmarket?.prices?.averageSellPrice ??
+      card.tcgplayer?.prices?.holofoil?.market ??
+      0
   });
 
-  /* =========================
-     Search Cards
-     ========================= */
-  async function searchCards() {
-    const query = searchInput.value.trim();
-    if (!query) return;
+  saveCollection(collection);
+  playSound("add");
+}
 
-    resultsDiv.innerHTML = "<p>Loading cards...</p>";
+// ==========================
+// 📚 LOAD COLLECTION (collection.html)
+// ==========================
+function loadCollection() {
+  const container = document.getElementById("collection");
+  if (!container) return;
 
-    try {
-      const response = await fetch(
-        `${API_URL}?q=name:${query}&pageSize=100`
-      );
-      const data = await response.json();
+  container.innerHTML = "";
+  const collection = getCollection();
 
-      resultsDiv.innerHTML = "";
-
-      if (!data.data || data.data.length === 0) {
-        resultsDiv.innerHTML = "<p>No cards found.</p>";
-        return;
-      }
-
-      data.data.forEach((card) => {
-        const imageUrl = card.images?.small;
-        if (!imageUrl) return;
-
-        const price =
-          card.tcgplayer?.prices?.holofoil?.market ??
-          card.tcgplayer?.prices?.normal?.market ??
-          null;
-
-        const cardDiv = document.createElement("div");
-        cardDiv.className = "card";
-
-        cardDiv.innerHTML = `
-          <img src="${imageUrl}" alt="${card.name}">
-          <h3>${card.name}</h3>
-          <p class="details">
-            ${card.set?.name || "Unknown Set"}
-            ${card.number ? `#${card.number}` : ""}
-          </p>
-          <p class="price">
-            ${price ? `$${price.toFixed(2)}` : "Price not available"}
-          </p>
-          <button>Add to Collection</button>
-        `;
-
-        cardDiv.querySelector("button").addEventListener("click", () => {
-          saveCard(card);
-        });
-
-        resultsDiv.appendChild(cardDiv);
-      });
-    } catch (err) {
-      console.error(err);
-      resultsDiv.innerHTML = "<p>Error loading cards.</p>";
-    }
+  if (collection.length === 0) {
+    container.innerHTML = "<p>No cards yet.</p>";
+    return;
   }
 
-  /* =========================
-     Save Card (No Duplicates)
-     ========================= */
-  function saveCard(card) {
-    const collection =
-      JSON.parse(localStorage.getItem("collection")) || [];
+  collection.forEach(card => {
+    const div = document.createElement("div");
+    div.className = "card";
 
-    if (collection.some((c) => c.id === card.id)) {
-      alert("This card is already in your collection.");
-      return;
-    }
+    div.innerHTML = `
+      <img src="${card.image}">
+      <h3>${card.name}</h3>
+      <p>${card.rarity}</p>
+      <p class="price">$${card.price || "N/A"}</p>
+      <button class="delete">Delete</button>
+    `;
 
-    collection.push(card);
-    localStorage.setItem("collection", JSON.stringify(collection));
-    alert("Added to collection!");
-  }
-});
+    div.querySelector(".delete").onclick = () => {
+      removeCard(card.id);
+    };
+
+    container.appendChild(div);
+  });
+}
+
+// ==========================
+// ❌ REMOVE CARD
+// ==========================
+function removeCard(id) {
+  let collection = getCollection();
+  collection = collection.filter(card => card.id !== id);
+  saveCollection(collection);
+  loadCollection();
+  playSound("error");
+}
