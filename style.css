@@ -196,3 +196,53 @@ nav a {
     width: 100%;
   }
 }
+/* =====================
+   POKEBALL LOADER
+===================== */
+.pokeball-loader {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background:
+    linear-gradient(to bottom, #e53935 50%, #ffffff 50%);
+  position: relative;
+  margin: 60px auto;
+  animation: spin 1.1s linear infinite;
+  box-shadow: 0 0 20px rgba(255,255,255,0.2);
+}
+
+.pokeball-loader::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  background: white;
+  border-radius: 50%;
+  border: 4px solid #222;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.pokeball-loader::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: #222;
+  transform: translateY(-50%);
+}
+
+/* Spin animation */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Utility */
+.hidden {
+  display: none;
+}
