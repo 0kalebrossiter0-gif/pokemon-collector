@@ -6,10 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const resultsDiv = document.getElementById("results");
   const themeToggle = document.getElementById("themeToggle");
 
-  if (!searchBtn || !searchInput || !resultsDiv) {
-    console.error("Missing required HTML elements");
-    return;
-  }
+  if (!searchBtn || !searchInput || !resultsDiv) return;
 
   /* =========================
      Theme Toggle
@@ -26,11 +23,8 @@ document.addEventListener("DOMContentLoaded", () => {
      Search Events
      ========================= */
   searchBtn.addEventListener("click", searchCards);
-
   searchInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      searchCards();
-    }
+    if (e.key === "Enter") searchCards();
   });
 
   /* =========================
@@ -38,11 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
      ========================= */
   async function searchCards() {
     const query = searchInput.value.trim();
-
-    if (!query) {
-      resultsDiv.innerHTML = "<p>Please enter a Pokémon name.</p>";
-      return;
-    }
+    if (!query) return;
 
     resultsDiv.innerHTML = "<p>Loading cards...</p>";
 
@@ -61,13 +51,55 @@ document.addEventListener("DOMContentLoaded", () => {
 
       data.data.forEach((card) => {
         const imageUrl = card.images?.small;
+        if (!imageUrl) return;
 
-        // Skip cards without proper front images
-        if (!imageUrl || imageUrl.toLowerCase().includes("back")) return;
+        const price =
+          card.tcgplayer?.prices?.holofoil?.market ??
+          card.tcgplayer?.prices?.normal?.market ??
+          null;
 
         const cardDiv = document.createElement("div");
         cardDiv.className = "card";
 
-        const price =
-          card.tcgplayer?.prices?.holofoil?.market ??
-          card.t
+        cardDiv.innerHTML = `
+          <img src="${imageUrl}" alt="${card.name}">
+          <h3>${card.name}</h3>
+          <p class="details">
+            ${card.set?.name || "Unknown Set"}
+            ${card.number ? `#${card.number}` : ""}
+          </p>
+          <p class="price">
+            ${price ? `$${price.toFixed(2)}` : "Price not available"}
+          </p>
+          <button>Add to Collection</button>
+        `;
+
+        cardDiv.querySelector("button").addEventListener("click", () => {
+          saveCard(card);
+        });
+
+        resultsDiv.appendChild(cardDiv);
+      });
+    } catch (err) {
+      console.error(err);
+      resultsDiv.innerHTML = "<p>Error loading cards.</p>";
+    }
+  }
+
+  /* =========================
+     Save Card (No Duplicates)
+     ========================= */
+  function saveCard(card) {
+    const collection =
+      JSON.parse(localStorage.getItem("collection")) || [];
+
+    if (collection.some((c) => c.id === card.id)) {
+      alert("This card is already in your collection.");
+      return;
+    }
+
+    collection.push(card);
+    localStorage.setItem("collection", JSON.stringify(collection));
+    alert("Added to collection!");
+  }
+});
