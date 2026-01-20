@@ -34,7 +34,7 @@
     </section>
   </main>
 
-  <!-- Script -->
+  <!-- Collection Script -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const collectionDiv = document.getElementById("collection");
@@ -51,10 +51,14 @@
       }
 
       let totalValue = 0;
-
       collectionDiv.innerHTML = "";
 
       collection.forEach((card, index) => {
+        const image = card.images?.small || "";
+        const name = card.name || "Unknown Card";
+        const setName = card.set?.name || "Unknown Set";
+        const number = card.number ? `#${card.number}` : "";
+
         const price =
           card.tcgplayer?.prices?.holofoil?.market ??
           card.tcgplayer?.prices?.normal?.market ??
@@ -66,38 +70,13 @@
         cardDiv.className = "card";
 
         cardDiv.innerHTML = `
-          <img src="${card.images.small}" alt="${card.name}">
-          <h3>${card.name}</h3>
-          <p class="details">
-            ${card.set?.name || "Unknown Set"}
-            ${card.number ? `#${card.number}` : ""}
+          ${image ? `<img src="${image}" alt="${name}">` : ""}
+          <h3>${name}</h3>
+          <p class="details">${setName} ${number}</p>
+          <p class="price">
+            ${price > 0 ? `$${price.toFixed(2)}` : "Price not available"}
           </p>
-          <p class="price">$${price.toFixed(2)}</p>
-          <button data-index="${index}">Remove</button>
+          <button>Remove</button>
         `;
 
-        cardDiv
-          .querySelector("button")
-          .addEventListener("click", () => {
-            removeCard(index);
-          });
-
-        collectionDiv.appendChild(cardDiv);
-      });
-
-      totalValueEl.textContent =
-        `Total Collection Value: $${totalValue.toFixed(2)}`;
-
-      function removeCard(index) {
-        collection.splice(index, 1);
-        localStorage.setItem(
-          "collection",
-          JSON.stringify(collection)
-        );
-        location.reload();
-      }
-    });
-  </script>
-
-</body>
-</html>
+        cardDiv.querySelector("button").addEventListener("click", () =>
