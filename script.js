@@ -20,12 +20,18 @@ async function searchCards() {
   try {
     const res = await fetch(`${API_URL}?q=name:${query}&pageSize=40`);
     const data = await res.json();
+
     resultsDiv.innerHTML = "";
+
+    if (!data.data || data.data.length === 0) {
+      resultsDiv.innerHTML = "No cards found.";
+      return;
+    }
 
     data.data.forEach(card => {
       const imageUrl = card.images?.small;
 
-      // Only show real front images
+      // Only allow real front images
       if (!imageUrl || imageUrl.toLowerCase().includes("back")) return;
 
       const div = document.createElement("div");
@@ -39,7 +45,9 @@ async function searchCards() {
       div.innerHTML = `
         <img src="${imageUrl}" alt="${card.name}" />
         <h3>${card.name}</h3>
-        <p class="price">${price ? `$${price}` : "No market price"}</p>
+        <p class="price">
+          ${price ? `$${price}` : "No market price"}
+        </p>
         <button>Add to Collection</button>
       `;
 
@@ -55,6 +63,7 @@ async function searchCards() {
   }
 }
 
+// Save to collection
 function saveCard(card) {
   const collection = JSON.parse(localStorage.getItem("collection")) || [];
   collection.push(card);
