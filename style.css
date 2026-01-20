@@ -8,19 +8,42 @@
 }
 
 /* =========================
+   Theme Variables
+   ========================= */
+:root {
+  --bg: #0f172a;
+  --surface: #020617;
+  --card: #f9fafb;
+  --text: #e5e7eb;
+  --text-dark: #1f2937;
+  --primary: #2a75bb;
+  --primary-dark: #1c4d8c;
+  --accent: #ffcb05;
+}
+
+/* Light mode */
+body.light {
+  --bg: #f3f4f6;
+  --surface: #ffffff;
+  --card: #ffffff;
+  --text: #1f2937;
+}
+
+/* =========================
    Base
    ========================= */
 body {
   font-family: "Segoe UI", Arial, sans-serif;
-  background-color: #0f172a; /* dark navy */
-  color: #e5e7eb;
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background-color 0.3s, color 0.3s;
 }
 
 /* =========================
    Header
    ========================= */
 .site-header {
-  background: linear-gradient(90deg, #2a75bb, #1c4d8c);
+  background: linear-gradient(90deg, var(--primary), var(--primary-dark));
   padding: 14px 24px;
   display: flex;
   align-items: center;
@@ -32,17 +55,22 @@ body {
   height: 48px;
 }
 
-/* Navigation */
 .site-header nav a {
-  color: #ffcb05;
+  color: var(--accent);
   text-decoration: none;
   font-weight: 700;
   margin-left: 18px;
-  font-size: 16px;
 }
 
-.site-header nav a:hover {
-  text-decoration: underline;
+.theme-toggle {
+  margin-left: 18px;
+  background: var(--accent);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  font-size: 16px;
 }
 
 /* =========================
@@ -54,19 +82,14 @@ main {
   padding: 0 20px;
 }
 
-section {
-  background-color: transparent;
-  margin-bottom: 30px;
-}
-
 /* =========================
-   Search Box
+   Search
    ========================= */
 .search {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
-  background-color: #020617;
+  background-color: var(--surface);
   padding: 18px;
   border-radius: 14px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
@@ -75,35 +98,19 @@ section {
 .search input {
   padding: 12px;
   font-size: 16px;
-  width: 260px;
   border-radius: 8px;
-  border: 2px solid #2a75bb;
-  background-color: #020617;
-  color: #e5e7eb;
-}
-
-.search input::placeholder {
-  color: #9ca3af;
-}
-
-.search input:focus {
-  outline: none;
-  border-color: #ffcb05;
+  border: 2px solid var(--primary);
+  background-color: transparent;
+  color: var(--text);
 }
 
 .search button {
   padding: 12px 20px;
-  font-size: 16px;
-  cursor: pointer;
   border-radius: 8px;
-  background: #ffcb05;
-  color: #1c4d8c;
+  background: var(--accent);
   border: none;
   font-weight: 700;
-}
-
-.search button:hover {
-  background: #f5b700;
+  cursor: pointer;
 }
 
 /* =========================
@@ -120,78 +127,53 @@ section {
    Card
    ========================= */
 .card {
-  background-color: #f9fafb;
+  background-color: var(--card);
+  color: var(--text-dark);
   border-radius: 18px;
   padding: 12px;
   text-align: center;
-  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.45);
+  border: 3px solid var(--accent);
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.4);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  color: #1f2937;
 }
 
 .card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 25px rgba(255, 203, 5, 0.6);
 }
 
 .card img {
   width: 100%;
-  height: auto;
   border-radius: 14px;
 }
 
-.card h3 {
-  font-size: 16px;
-  margin: 10px 0 4px;
-}
-
+/* =========================
+   Text
+   ========================= */
 .details {
   font-size: 13px;
   color: #4b5563;
-  margin-bottom: 6px;
 }
 
 .price {
-  font-size: 14px;
   font-weight: 700;
-  margin-bottom: 10px;
-  color: #1c4d8c;
-}
-
-/* Card button */
-.card button {
-  background: #2a75bb;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.card button:hover {
-  background: #1c4d8c;
+  color: var(--primary-dark);
 }
 
 /* =========================
-   Collection Grid
+   Rarity Badges
    ========================= */
-#collection {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-  gap: 22px;
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 6px;
 }
 
-/* =========================
-   Mobile
-   ========================= */
-@media (max-width: 600px) {
-  .site-header {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .search input {
-    width: 100%;
-  }
-}
+.common { background: #9ca3af; color: white; }
+.uncommon { background: #22c55e; color: white; }
+.rare { background: #3b82f6; color: white; }
+.ultra { background: #a855f7; color: white; }
+.secret { background: #f59e0b; color: black; }
