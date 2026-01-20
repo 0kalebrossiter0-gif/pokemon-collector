@@ -1,26 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>My Pokémon Collection</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Link to CSS -->
-  <link rel="stylesheet" href="style.css" />
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <header>
-    <h1>My Collection</h1>
-    <a href="index.html">Scan More Cards</a>
+  <!-- Header -->
+  <header class="site-header">
+    <img src="pokemon-logo.png" alt="Pokémon Logo" class="logo">
+
+    <nav>
+      <a href="index.html">Search</a>
+      <a href="collection.html">My Collection</a>
+    </nav>
   </header>
 
+  <!-- Main Content -->
   <main>
-    <section id="collection" class="grid"></section>
+    <!-- Collection Summary -->
+    <section class="search">
+      <h2 style="color:#ffcb05;">My Collection</h2>
+      <p id="totalValue" style="font-weight:700;"></p>
+    </section>
+
+    <!-- Collection Grid -->
+    <section>
+      <div id="collection" class="grid"></div>
+    </section>
   </main>
 
-  <!-- Link to JavaScript -->
-  <script src="script.js"></script>
+  <!-- Script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const collectionDiv = document.getElementById("collection");
+      const totalValueEl = document.getElementById("totalValue");
+
+      let collection =
+        JSON.parse(localStorage.getItem("collection")) || [];
+
+      if (collection.length === 0) {
+        collectionDiv.innerHTML =
+          "<p>Your collection is empty.</p>";
+        totalValueEl.textContent = "";
+        return;
+      }
+
+      let totalValue = 0;
+
+      collectionDiv.innerHTML = "";
+
+      collection.forEach((card, index) => {
+        const price =
+          card.tcgplayer?.prices?.holofoil?.market ??
+          card.tcgplayer?.prices?.normal?.market ??
+          0;
+
+        totalValue += price;
+
+        const cardDiv = document.createElement("div");
+        cardDiv.className = "card";
+
+        cardDiv.innerHTML = `
+          <img src="${card.images.small}" alt="${card.name}">
+          <h3>${card.name}</h3>
+          <p class="details">
+            ${card.set?.name || "Unknown Set"}
+            ${card.number ? `#${card.number}` : ""}
+          </p>
+          <p class="price">$${price.toFixed(2)}</p>
+          <button data-index="${index}">Remove</button>
+        `;
+
+        cardDiv
+          .querySelector("button")
+          .addEventListener("click", () => {
+            removeCard(index);
+          });
+
+        collectionDiv.appendChild(cardDiv);
+      });
+
+      totalValueEl.textContent =
+        `Total Collection Value: $${totalValue.toFixed(2)}`;
+
+      function removeCard(index) {
+        collection.splice(index, 1);
+        localStorage.setItem(
+          "collection",
+          JSON.stringify(collection)
+        );
+        location.reload();
+      }
+    });
+  </script>
 
 </body>
 </html>
