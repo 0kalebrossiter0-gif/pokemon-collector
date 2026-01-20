@@ -1,4 +1,6 @@
-/* Reset / Base */
+/* =========================
+   Base / Reset
+   ========================= */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -11,14 +13,20 @@ body {
   color: #333;
 }
 
-/* Header */
+/* =========================
+   Header
+   ========================= */
 header {
   background-color: #ef5350;
   color: white;
-  padding: 15px;
+  padding: 15px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+header h1 {
+  font-size: 20px;
 }
 
 header a {
@@ -27,10 +35,12 @@ header a {
   font-weight: bold;
 }
 
-/* Layout */
+/* =========================
+   Layout
+   ========================= */
 main {
   padding: 20px;
-  max-width: 1100px;
+  max-width: 1200px;
   margin: auto;
 }
 
@@ -38,21 +48,34 @@ section {
   margin-bottom: 20px;
 }
 
-/* Inputs */
-input[type="text"],
-input[type="file"] {
-  padding: 10px;
-  width: 100%;
-  max-width: 400px;
-  margin-bottom: 10px;
+/* =========================
+   Search
+   ========================= */
+.search {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
+.search input {
+  padding: 10px;
+  font-size: 16px;
+  width: 260px;
+}
+
+.search button {
+  padding: 10px 16px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* =========================
+   Buttons
+   ========================= */
 button {
-  padding: 10px 15px;
   background-color: #ef5350;
   color: white;
   border: none;
-  cursor: pointer;
   border-radius: 4px;
 }
 
@@ -60,14 +83,18 @@ button:hover {
   background-color: #d84343;
 }
 
-/* Card Grid */
+/* =========================
+   Grid
+   ========================= */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 15px;
+  gap: 16px;
 }
 
-/* Card */
+/* =========================
+   Card
+   ========================= */
 .card {
   background-color: white;
   border: 1px solid #ddd;
@@ -76,37 +103,49 @@ button:hover {
   text-align: center;
 }
 
-/* IMPORTANT: DO NOT OVERRIDE IMAGE */
+/* IMPORTANT: let images show naturally */
 .card img {
   width: 100%;
   height: auto;
   display: block;
-  background: none;
 }
 
-/* Card Text */
+/* Card text */
 .card h3 {
   font-size: 16px;
   margin: 8px 0 4px;
 }
 
-.card .price {
-  font-size: 14px;
-  color: #555;
+.details {
+  font-size: 13px;
+  color: #666;
   margin-bottom: 6px;
 }
 
-/* Collection Page */
+.price {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+/* =========================
+   Collection Page
+   ========================= */
 #collection {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 15px;
+  gap: 16px;
 }
 
-/* Mobile */
+/* =========================
+   Mobile
+   ========================= */
 @media (max-width: 600px) {
   header {
     flex-direction: column;
     gap: 10px;
+  }
+
+  .search input {
+    width: 100%;
   }
 }
