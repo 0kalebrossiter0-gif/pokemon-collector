@@ -5,6 +5,7 @@
   <title>Pokémon Card Collector</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <!-- CSS -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -16,7 +17,7 @@
 
   <main>
 
-    <section>
+    <section class="search">
       <input
         type="text"
         id="searchInput"
@@ -29,45 +30,7 @@
 
   </main>
 
-  <script>
-    const API_URL = "https://api.pokemontcg.io/v2/cards";
-
-    document.getElementById("searchBtn").addEventListener("click", async () => {
-      const query = document.getElementById("searchInput").value.trim();
-      const results = document.getElementById("results");
-      results.innerHTML = "Loading...";
-
-      const res = await fetch(`${API_URL}?q=name:${query}&pageSize=40`);
-      const data = await res.json();
-      results.innerHTML = "";
-
-      data.data.forEach(card => {
-        const img = card.images?.small;
-        if (!img) return;
-
-        const div = document.createElement("div");
-        div.className = "card";
-
-        div.innerHTML = `
-          <img 
-            src="${img}" 
-            alt="${card.name}" 
-            style="
-              width:100%;
-              height:auto;
-              display:block;
-              background:none;
-              border:3px solid lime;
-            "
-          />
-          <h3>${card.name}</h3>
-        `;
-
-        results.appendChild(div);
-      });
-    });
+  <!-- JavaScript -->
   <script src="script.js"></script>
-
-
 </body>
 </html>
