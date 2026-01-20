@@ -101,4 +101,13 @@ if (collectionDiv) {
     collectionDiv.appendChild(div);
   });
 }
+const resetBtn = document.getElementById("resetCollection");
+
+if (resetBtn) {
+  resetBtn.addEventListener("click", () => {
+    localStorage.removeItem("collection");
+    alert("Collection cleared. Refresh the page.");
+  });
+}
+
 
