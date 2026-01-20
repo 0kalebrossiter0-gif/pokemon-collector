@@ -140,16 +140,23 @@
           const cardDiv = document.createElement("div");
           cardDiv.className = "card";
 
-          cardDiv.innerHTML = `
-            ${image ? `<img src="${image}" alt="${card.name}">` : ""}
-            <h3>${card.name || "Unknown Card"}</h3>
-            <p class="details">${card.set?.name || "Unknown Set"}</p>
-            <p class="details"><strong>Rarity:</strong> ${card.rarity || "Unknown"}</p>
-            <p class="price">
-              ${price > 0 ? `$${price.toFixed(2)}` : "Price not available"}
-            </p>
-            <button class="remove-btn">Delete</button>
-          `;
+ cardDiv.innerHTML = `
+  <div class="card-inner">
+    <div class="card-front">
+      ${image ? `<img src="${image}" alt="${card.name}">` : ""}
+    </div>
+
+    <div class="card-back">
+      <h3>${card.name || "Unknown Card"}</h3>
+      <p class="details">${card.set?.name || "Unknown Set"}</p>
+      <p class="details"><strong>Rarity:</strong> ${card.rarity || "Unknown"}</p>
+      <p class="price">
+        ${price > 0 ? `$${price.toFixed(2)}` : "Price not available"}
+      </p>
+      <button class="remove-btn">Delete</button>
+    </div>
+  </div>
+`;
 
           cardDiv
             .querySelector(".remove-btn")
