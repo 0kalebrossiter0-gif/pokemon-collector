@@ -6,14 +6,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const resultsDiv = document.getElementById("results");
 
   if (!searchBtn || !searchInput || !resultsDiv) {
-    console.error("Required elements not found");
+    console.error("Missing required HTML elements");
     return;
   }
 
-  // Click search
+  // Search button click
   searchBtn.addEventListener("click", searchCards);
 
-  // Press Enter to search
+  // Enter key search
   searchInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
       searchCards();
@@ -24,33 +24,33 @@ document.addEventListener("DOMContentLoaded", () => {
     const query = searchInput.value.trim();
 
     if (!query) {
-      resultsDiv.innerHTML = "Please enter a Pokémon name.";
+      resultsDiv.innerHTML = "<p>Please enter a Pokémon name.</p>";
       return;
     }
 
-    resultsDiv.innerHTML = "Loading...";
+    resultsDiv.innerHTML = "<p>Loading cards...</p>";
 
     try {
-      const res = await fetch(
+      const response = await fetch(
         `${API_URL}?q=name:${query}&pageSize=100`
       );
-      const data = await res.json();
+      const data = await response.json();
 
       resultsDiv.innerHTML = "";
 
       if (!data.data || data.data.length === 0) {
-        resultsDiv.innerHTML = "No cards found.";
+        resultsDiv.innerHTML = "<p>No cards found.</p>";
         return;
       }
 
-      data.data.forEach(card => {
+      data.data.forEach((card) => {
         const imageUrl = card.images?.small;
 
-        // Skip invalid or back images
+        // Skip cards without a proper front image
         if (!imageUrl || imageUrl.toLowerCase().includes("back")) return;
 
-        const div = document.createElement("div");
-        div.className = "card";
+        const cardDiv = document.createElement("div");
+        cardDiv.className = "card";
 
         const price =
           card.tcgplayer?.prices?.holofoil?.market ??
@@ -63,36 +63,40 @@ document.addEventListener("DOMContentLoaded", () => {
           : "";
         const rarity = card.rarity ? `(${card.rarity})` : "";
 
-        div.innerHTML = `
-          <img src="${imageUrl}" alt="${card.name}" />
+        cardDiv.innerHTML = `
+          <img src="${imageUrl}" alt="${card.name}">
           <h3>${card.name}</h3>
-          <p class="details">
-            ${setName} ${cardNumber} ${rarity}
-          </p>
-          <p class="price">
-            ${price ? `$${price}` : "Price not available"}
-          </p>
+          <p class="details">${setName} ${cardNumber} ${rarity}</p>
+          <p class="price">${price ? `$${price}` : "Price not available"}</p>
           <button>Add to Collection</button>
         `;
 
-        div.querySelector("button").addEventListener("click", () => {
+        cardDiv.querySelector("button").addEventListener("click", () => {
           saveCard(card);
         });
 
-        resultsDiv.appendChild(div);
+        resultsDiv.appendChild(cardDiv);
       });
-
-    } catch (err) {
-      console.error(err);
-      resultsDiv.innerHTML = "Error loading cards.";
+    } catch (error) {
+      console.error(error);
+      resultsDiv.innerHTML = "<p>Error loading cards.</p>";
     }
   }
 
   function saveCard(card) {
     const collection = JSON.parse(localStorage.getItem("collection")) || [];
+
+    const exists = collection.some(
+      (savedCard) => savedCard.id === card.id
+    );
+
+    if (exists) {
+      alert("This card is already in your collection.");
+      return;
+    }
+
     collection.push(card);
     localStorage.setItem("collection", JSON.stringify(collection));
     alert("Added to collection!");
   }
 });
-
