@@ -5,7 +5,7 @@
   <title>Pokémon Card Collector</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Pixel / Pokémon-style font -->
+  <!-- Pokémon-style pixel font -->
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
@@ -22,7 +22,7 @@
 
 <main>
 
-  <!-- CENTERED SEARCH -->
+  <!-- Search Hero -->
   <section class="search-hero">
     <h1>Search Pokémon Cards</h1>
 
@@ -36,10 +36,12 @@
     </div>
   </section>
 
-  <section>
-    <div id="loader" class="pokeball-loader hidden"></div>
-<div id="results" class="grid"></div>
+  <!-- Pokéball Loader -->
+  <div id="loader" class="pokeball-loader hidden"></div>
 
+  <!-- Results -->
+  <section>
+    <div id="results" class="grid"></div>
   </section>
 
 </main>
@@ -48,6 +50,7 @@
 const searchBtn = document.getElementById("searchBtn");
 const searchInput = document.getElementById("searchInput");
 const results = document.getElementById("results");
+const loader = document.getElementById("loader");
 
 searchBtn.onclick = search;
 searchInput.addEventListener("keydown", e => {
@@ -58,47 +61,59 @@ async function search() {
   const query = searchInput.value.trim();
   if (!query) return;
 
-  results.innerHTML = "<p>Loading...</p>";
-
-  const res = await fetch(
-    `https://api.pokemontcg.io/v2/cards?q=name:${query}`
-  );
-  const data = await res.json();
-
   results.innerHTML = "";
+  loader.classList.remove("hidden");
 
-  data.data.forEach(card => {
-    const div = document.createElement("div");
-    div.className = "card";
+  try {
+    const res = await fetch(
+      `https://api.pokemontcg.io/v2/cards?q=name:${query}`
+    );
+    const data = await res.json();
 
-    div.innerHTML = `
-      <div class="card-inner">
-        <div class="card-front">
-          <img src="${card.images.small}">
+    loader.classList.add("hidden");
+
+    if (!data.data || data.data.length === 0) {
+      results.innerHTML = "<p>No cards found.</p>";
+      return;
+    }
+
+    data.data.forEach(card => {
+      const div = document.createElement("div");
+      div.className = "card";
+
+      div.innerHTML = `
+        <div class="card-inner">
+          <div class="card-front">
+            <img src="${card.images.small}" alt="${card.name}">
+          </div>
+          <div class="card-back">
+            <h3>${card.name}</h3>
+            <p>${card.set.name}</p>
+            <button onclick='addCard(${JSON.stringify(card)})'>Add</button>
+          </div>
         </div>
-        <div class="card-back">
-          <h3>${card.name}</h3>
-          <p>${card.set.name}</p>
-          <button onclick='addCard(${JSON.stringify(card)})'>Add</button>
-        </div>
-      </div>
-    `;
+      `;
 
-    results.appendChild(div);
-  });
+      results.appendChild(div);
+    });
+
+  } catch (error) {
+    loader.classList.add("hidden");
+    results.innerHTML = "<p>Error loading cards.</p>";
+  }
 }
 
 function addCard(card) {
   const collection = JSON.parse(localStorage.getItem("collection")) || [];
 
   if (collection.some(c => c.id === card.id)) {
-    alert("Card already in collection");
+    alert("This card is already in your collection!");
     return;
   }
 
   collection.push(card);
   localStorage.setItem("collection", JSON.stringify(collection));
-  alert("Added to collection!");
+  alert("Card added to collection!");
 }
 </script>
 
