@@ -2,52 +2,71 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Pokémon Card Scanner</title>
+  <title>Pokémon Card Collector</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Link to CSS -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
   <header>
-    <h1>Pokémon Card Scanner</h1>
+    <h1>Pokémon Card Collector</h1>
     <a href="collection.html">My Collection</a>
   </header>
 
   <main>
 
-    <!-- Upload Section -->
-    <section class="upload">
-      <h2>Upload Card Image</h2>
-      <input type="file" id="imageInput" accept="image/*" />
-      <p class="hint">
-        Upload a photo of your card, then search by name to confirm it
-      </p>
-    </section>
-
-    <!-- Search Section -->
-    <section class="search">
+    <section>
       <input
         type="text"
         id="searchInput"
-        placeholder="Enter Pokémon card name (e.g. Pikachu)"
+        placeholder="Search Pokémon (e.g. Pikachu)"
       />
       <button id="searchBtn">Search</button>
     </section>
 
-    <!-- RESET BUTTON (TEMPORARY FIX) -->
-    <button id="resetCollection" style="margin-bottom:20px;">
-      Reset Collection (one time)
-    </button>
-
-    <!-- Results -->
     <section id="results" class="grid"></section>
 
   </main>
 
-  <!-- Link to JavaScript -->
-  <script src="script.js"></script>
+  <script>
+    const API_URL = "https://api.pokemontcg.io/v2/cards";
+
+    document.getElementById("searchBtn").addEventListener("click", async () => {
+      const query = document.getElementById("searchInput").value.trim();
+      const results = document.getElementById("results");
+      results.innerHTML = "Loading...";
+
+      const res = await fetch(`${API_URL}?q=name:${query}&pageSize=40`);
+      const data = await res.json();
+      results.innerHTML = "";
+
+      data.data.forEach(card => {
+        const img = card.images?.small;
+        if (!img) return;
+
+        const div = document.createElement("div");
+        div.className = "card";
+
+        div.innerHTML = `
+          <img 
+            src="${img}" 
+            alt="${card.name}" 
+            style="
+              width:100%;
+              height:auto;
+              display:block;
+              background:none;
+              border:3px solid lime;
+            "
+          />
+          <h3>${card.name}</h3>
+        `;
+
+        results.appendChild(div);
+      });
+    });
+  </script>
 
 </body>
 </html>
