@@ -48,6 +48,12 @@
     <p id="statTop"></p>
   </section>
 
+  <!-- Chart -->
+  <section class="chart-section">
+    <h3>Collection Value Chart</h3>
+    <canvas id="valueChart" width="800" height="300"></canvas>
+  </section>
+
   <!-- Grid -->
   <section>
     <div id="grid" class="grid"></div>
@@ -65,6 +71,9 @@ const statCount = document.getElementById("statCount");
 const statTotal = document.getElementById("statTotal");
 const statAvg = document.getElementById("statAvg");
 const statTop = document.getElementById("statTop");
+
+const canvas = document.getElementById("valueChart");
+const ctx = canvas.getContext("2d");
 
 let collection = JSON.parse(localStorage.getItem("collection")) || [];
 
@@ -104,6 +113,7 @@ function render() {
     filtered.sort((a,b)=>price(b)-price(a));
 
   updateStats(filtered);
+  drawChart(filtered);
 
   if (!filtered.length) {
     grid.innerHTML = "<p>No cards found.</p>";
@@ -155,6 +165,29 @@ function updateStats(cards) {
   statTop.textContent = top
     ? `Most Valuable: ${top.name} ($${topPrice.toFixed(2)})`
     : "";
+}
+
+function drawChart(cards) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const values = cards.map(price).filter(v=>v>0);
+  if (!values.length) return;
+
+  const max = Math.max(...values);
+  const barWidth = canvas.width / values.length;
+
+  values.forEach((v, i) => {
+    const h = (v / max) * (canvas.height - 40);
+    const x = i * barWidth;
+    const y = canvas.height - h;
+
+    ctx.fillStyle = "#ffcb05";
+    ctx.fillRect(x + 6, y, barWidth - 12, h);
+
+    ctx.fillStyle = "#fff";
+    ctx.font = "10px Arial";
+    ctx.fillText(`$${v.toFixed(2)}`, x + 8, y - 5);
+  });
 }
 
 function removeCard(id) {
