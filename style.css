@@ -1,131 +1,148 @@
-/* Reset */
+/* =========================
+   GLOBAL RESET
+========================= */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-/* Body */
 body {
-  font-family: 'Press Start 2P', cursive;
-  background: radial-gradient(circle at top, #1e3c72, #0b1c33);
+  font-family: 'Press Start 2P', monospace;
+  background: linear-gradient(180deg, #0b1d3a, #0f2a56);
   color: white;
   min-height: 100vh;
 }
 
-/* Header */
-.site-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 18px 30px;
-  background: linear-gradient(to right, #081a33, #0b2550);
+/* =========================
+   HEADER
+========================= */
+header {
+  background: linear-gradient(90deg, #08162f, #0b1d3a);
   border-bottom: 3px solid #ffd700;
 }
 
-.header-left {
+.header-content {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 24px;
 }
 
-.logo {
+/* Pokémon Logo */
+.header-logo img {
   height: 90px;
-  image-rendering: pixelated;
+  width: auto;
+
+  /* 🔥 THIS REMOVES THE WHITE BACKGROUND VISUALLY */
+  mix-blend-mode: multiply;
+
+  /* Optional polish */
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
 }
 
-/* Description text */
-.site-description {
-  max-width: 420px;
-  font-size: 10px;
+/* Header Description */
+.header-text {
+  font-size: 11px;
   line-height: 1.6;
   color: #ffd700;
+  max-width: 520px;
 }
 
-/* Navigation */
-nav a {
+/* My Collection Link */
+.header-link {
+  margin-left: auto;
   color: #ffd700;
   text-decoration: none;
   font-size: 12px;
 }
 
-nav a:hover {
-  text-shadow: 0 0 8px #ffd700;
+.header-link:hover {
+  text-decoration: underline;
 }
 
-/* Main Container */
-.container {
-  padding: 50px 20px;
-}
-
-/* Search Section */
-.search-section {
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-.search-section h1 {
-  font-size: 26px;
-  margin-bottom: 30px;
-  text-shadow: 4px 4px 0 #000;
-}
-
-/* Search Bar */
-.search-bar {
+/* =========================
+   MAIN SEARCH SECTION
+========================= */
+main {
   display: flex;
   justify-content: center;
-  gap: 15px;
+  align-items: center;
+  padding: 80px 20px;
 }
 
-.search-bar input {
-  width: 380px;
-  padding: 16px;
-  font-size: 14px;
-  font-family: 'Press Start 2P', cursive;
-  border-radius: 12px;
+.search-container {
+  text-align: center;
+}
+
+/* Title */
+.search-container h1 {
+  font-size: 22px;
+  margin-bottom: 40px;
+  text-shadow: 0 3px 0 #000;
+}
+
+/* Search Box */
+.search-box {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.search-box input {
+  width: 320px;
+  padding: 16px 18px;
+  font-size: 12px;
+  border-radius: 14px;
   border: 3px solid #ffd700;
   outline: none;
-  background: #fff;
-  color: #000;
+  font-family: inherit;
 }
 
-.search-bar input:focus {
-  box-shadow: 0 0 12px #ffd700;
+.search-box input:focus {
+  box-shadow: 0 0 12px rgba(255,215,0,0.6);
 }
 
-.search-bar button {
-  padding: 16px 26px;
-  font-size: 14px;
-  font-family: 'Press Start 2P', cursive;
-  border-radius: 12px;
-  border: 3px solid #ffd700;
-  background: linear-gradient(to bottom, #ffcc00, #ff9900);
+/* Search Button */
+.search-box button {
+  padding: 16px 28px;
+  font-size: 12px;
+  font-family: inherit;
+  background: linear-gradient(180deg, #ffd700, #ffb700);
+  border: none;
+  border-radius: 14px;
   cursor: pointer;
+  box-shadow: 0 4px 0 #c99700;
 }
 
-.search-bar button:hover {
+.search-box button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 0 #b8860b;
+  box-shadow: 0 6px 0 #c99700;
 }
 
-/* Card Grid */
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 25px;
-  margin-top: 30px;
+.search-box button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #c99700;
 }
 
-/* Cards (safe base, your JS will fill content) */
-.card {
-  background: #102a4d;
-  border-radius: 16px;
-  padding: 12px;
-  border: 3px solid #ffd700;
-  text-align: center;
-  transition: transform 0.2s;
-}
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 600px) {
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-.card:hover {
-  transform: translateY(-6px);
+  .header-link {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+
+  .search-box input {
+    width: 100%;
+  }
 }
