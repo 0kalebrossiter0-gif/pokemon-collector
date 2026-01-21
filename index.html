@@ -1,54 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Pokémon Card Collector</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Pokémon-style pixel font -->
+  <!-- Pixel Font -->
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-  <!-- Header -->
-  <header class="site-header">
-    <div class="header-left">
-      <img src="pokemon-logo.png" alt="Pokémon Logo" class="logo" />
+  <!-- HEADER -->
+  <header>
+    <div class="header-content">
+      <div class="header-logo">
+        <!-- USE YOUR LOGO HERE -->
+        <img src="pokemon-logo.png" alt="Pokémon Logo">
+      </div>
 
-      <div class="site-description">
+      <div class="header-text">
         Collect, track, and explore Pokémon trading cards — build your ultimate collection!
       </div>
-    </div>
 
-    <nav>
-      <a href="collection.html">My Collection</a>
-    </nav>
+      <a href="collection.html" class="header-link">My Collection</a>
+    </div>
   </header>
 
-  <!-- Main Content -->
-  <main class="container">
+  <!-- MAIN -->
+  <main>
+    <h1 class="page-title">Search Pokémon Cards</h1>
 
-    <!-- Search Section -->
-    <section class="search-section">
-      <h1>Search Pokémon Cards</h1>
+    <div class="search-container">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Search Pokémon (e.g. Pikachu)"
+      >
+      <button id="searchButton">Search</button>
+    </div>
 
-      <div class="search-bar">
-        <input
-          id="searchInput"
-          type="text"
-          placeholder="Search Pokémon (e.g. Pikachu)"
-        />
-        <button onclick="searchCards()">Search</button>
-      </div>
-    </section>
-
-    <!-- Results -->
-    <section id="results" class="card-grid"></section>
-
+    <!-- Results will go here later -->
+    <div id="results"></div>
   </main>
 
-  <script src="scripts.js"></script>
 </body>
 </html>
