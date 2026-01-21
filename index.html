@@ -4,10 +4,9 @@
   <meta charset="UTF-8" />
   <title>Pokémon Card Collector</title>
 
-  <!-- Font -->
+  <!-- Pokémon-style pixel font -->
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
-  <!-- Styles -->
   <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -15,7 +14,14 @@
 
   <!-- Header -->
   <header class="site-header">
-    <img src="pokemon-logo.png" alt="Pokémon Logo" class="logo" />
+    <div class="header-left">
+      <img src="pokemon-logo.png" alt="Pokémon Logo" class="logo" />
+
+      <div class="site-description">
+        Collect, track, and explore Pokémon trading cards — build your ultimate collection!
+      </div>
+    </div>
+
     <nav>
       <a href="collection.html">My Collection</a>
     </nav>
@@ -39,13 +45,10 @@
     </section>
 
     <!-- Results -->
-    <section id="results" class="card-grid">
-      <!-- Cards appear here -->
-    </section>
+    <section id="results" class="card-grid"></section>
 
   </main>
 
-  <!-- Script -->
   <script src="scripts.js"></script>
 </body>
 </html>
