@@ -1,28 +1,5 @@
 // ==========================
-// 🔊 AUDIO SYSTEM (WAV)
-// ==========================
-let soundEnabled = false;
-
-const sounds = {
-  search: new Audio("search.wav"),
-  add: new Audio("add.wav"),
-  error: new Audio("error.wav")
-};
-
-// Enable sound after first user interaction (Chrome requirement)
-document.addEventListener("click", () => {
-  soundEnabled = true;
-}, { once: true });
-
-function playSound(name) {
-  if (!soundEnabled) return;
-  if (!sounds[name]) return;
-  sounds[name].currentTime = 0;
-  sounds[name].play().catch(() => {});
-}
-
-// ==========================
-// 📦 STORAGE
+// 📦 STORAGE HELPERS
 // ==========================
 function getCollection() {
   return JSON.parse(localStorage.getItem("collection")) || [];
@@ -36,13 +13,12 @@ function saveCollection(cards) {
 // 🔍 SEARCH CARDS
 // ==========================
 async function searchCards() {
-  const query = document.getElementById("searchInput").value.trim();
+  const input = document.getElementById("searchInput");
   const resultsDiv = document.getElementById("results");
+  const query = input.value.trim();
 
   resultsDiv.innerHTML = "";
   if (!query) return;
-
-  playSound("search");
 
   try {
     const res = await fetch(
@@ -50,16 +26,21 @@ async function searchCards() {
     );
     const data = await res.json();
 
+    if (!data.data || data.data.length === 0) {
+      resultsDiv.innerHTML = "<p>No cards found.</p>";
+      return;
+    }
+
     data.data.forEach(card => {
       if (!card.images?.small) return;
-
-      const cardDiv = document.createElement("div");
-      cardDiv.className = "card";
 
       const price =
         card.cardmarket?.prices?.averageSellPrice ??
         card.tcgplayer?.prices?.holofoil?.market ??
         "N/A";
+
+      const cardDiv = document.createElement("div");
+      cardDiv.className = "card";
 
       cardDiv.innerHTML = `
         <img src="${card.images.small}" alt="${card.name}">
@@ -74,7 +55,7 @@ async function searchCards() {
 
   } catch (err) {
     console.error(err);
-    playSound("error");
+    resultsDiv.innerHTML = "<p>Error loading cards.</p>";
   }
 }
 
@@ -86,7 +67,6 @@ function addToCollection(card) {
 
   // Prevent duplicates
   if (collection.some(c => c.id === card.id)) {
-    playSound("error");
     alert("This card is already in your collection.");
     return;
   }
@@ -103,21 +83,20 @@ function addToCollection(card) {
   });
 
   saveCollection(collection);
-  playSound("add");
 }
 
 // ==========================
-// 📚 LOAD COLLECTION (collection.html)
+// 📚 LOAD COLLECTION PAGE
 // ==========================
 function loadCollection() {
   const container = document.getElementById("collection");
   if (!container) return;
 
-  container.innerHTML = "";
   const collection = getCollection();
+  container.innerHTML = "";
 
   if (collection.length === 0) {
-    container.innerHTML = "<p>No cards yet.</p>";
+    container.innerHTML = "<p>No cards in your collection yet.</p>";
     return;
   }
 
@@ -133,10 +112,7 @@ function loadCollection() {
       <button class="delete">Delete</button>
     `;
 
-    div.querySelector(".delete").onclick = () => {
-      removeCard(card.id);
-    };
-
+    div.querySelector(".delete").onclick = () => removeCard(card.id);
     container.appendChild(div);
   });
 }
@@ -149,5 +125,4 @@ function removeCard(id) {
   collection = collection.filter(card => card.id !== id);
   saveCollection(collection);
   loadCollection();
-  playSound("error");
 }
