@@ -1,164 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Pokémon Card Collector</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Pokémon-style pixel font -->
+  <!-- Font -->
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css">
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
-<header class="site-header">
-  <img src="pokemon-logo.png" class="logo" alt="Pokémon Logo">
+  <!-- Header -->
+  <header class="site-header">
+    <img src="pokemon-logo.png" alt="Pokémon Logo" class="logo" />
+    <nav>
+      <a href="collection.html">My Collection</a>
+    </nav>
+  </header>
 
-  <nav>
-    <a href="index.html">Search</a>
-    <a href="collection.html">My Collection</a>
-  </nav>
-</header>
+  <!-- Main Content -->
+  <main class="container">
 
-<main>
+    <!-- Search Section -->
+    <section class="search-section">
+      <h1>Search Pokémon Cards</h1>
 
-  <!-- 🔊 Enable Sound (Chrome requirement) -->
-  <button id="enableSoundBtn" class="enable-sound">🔊 Enable Sound</button>
-
-  <section class="search-hero">
-    <h1>Search Pokémon Cards</h1>
-
-    <div class="search-box">
-      <input id="searchInput" placeholder="Search (e.g. Pikachu)">
-      <button id="searchBtn">Search</button>
-    </div>
-  </section>
-
-  <div id="loader" class="pokeball-loader hidden"></div>
-  <div id="results" class="grid"></div>
-
-</main>
-
-<!-- AUDIO FILES -->
-<audio id="sound-search" src="search.mp3" preload="auto"></audio>
-<audio id="sound-add" src="add.mp3" preload="auto"></audio>
-<audio id="sound-error" src="error.mp3" preload="auto"></audio>
-
-<script>
-/* =====================================================
-   🔊 AUDIO — CHROME-SAFE (WEB AUDIO API UNLOCK)
-===================================================== */
-
-let audioContext;
-let audioUnlocked = false;
-
-function unlockAudioContext() {
-  if (!audioContext) {
-    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-  }
-  if (audioContext.state === "suspended") {
-    audioContext.resume();
-  }
-}
-
-const sounds = {
-  search: document.getElementById("sound-search"),
-  add: document.getElementById("sound-add"),
-  error: document.getElementById("sound-error")
-};
-
-const enableBtn = document.getElementById("enableSoundBtn");
-
-enableBtn.onclick = () => {
-  unlockAudioContext();
-
-  Object.values(sounds).forEach(sound => {
-    sound.muted = false;
-    sound.volume = 1;
-    sound.play().then(() => {
-      sound.pause();
-      sound.currentTime = 0;
-    }).catch(() => {});
-  });
-
-  audioUnlocked = true;
-  enableBtn.remove();
-};
-
-function playSound(sound) {
-  if (!audioUnlocked) return;
-  unlockAudioContext();
-  sound.currentTime = 0;
-  sound.play().catch(() => {});
-}
-
-/* =====================================================
-   🔍 SEARCH + CARD LOGIC
-===================================================== */
-
-const searchBtn = document.getElementById("searchBtn");
-const searchInput = document.getElementById("searchInput");
-const results = document.getElementById("results");
-const loader = document.getElementById("loader");
-
-searchBtn.onclick = search;
-searchInput.addEventListener("keydown", e => {
-  if (e.key === "Enter") search();
-});
-
-async function search() {
-  const query = searchInput.value.trim();
-  if (!query) return;
-
-  playSound(sounds.search);
-
-  results.innerHTML = "";
-  loader.classList.remove("hidden");
-
-  const res = await fetch(
-    `https://api.pokemontcg.io/v2/cards?q=name:${query}`
-  );
-  const data = await res.json();
-
-  loader.classList.add("hidden");
-
-  data.data.forEach(card => {
-    const div = document.createElement("div");
-    div.className = "card";
-
-    div.innerHTML = `
-      <div class="card-inner">
-        <div class="card-front">
-          <img src="${card.images.small}">
-        </div>
-        <div class="card-back">
-          <h3>${card.name}</h3>
-          <p>${card.set.name}</p>
-          <button>Add</button>
-        </div>
+      <div class="search-bar">
+        <input
+          id="searchInput"
+          type="text"
+          placeholder="Search Pokémon (e.g. Pikachu)"
+        />
+        <button onclick="searchCards()">Search</button>
       </div>
-    `;
+    </section>
 
-    div.querySelector("button").onclick = () => addCard(card);
-    results.appendChild(div);
-  });
-}
+    <!-- Results -->
+    <section id="results" class="card-grid">
+      <!-- Cards appear here -->
+    </section>
 
-function addCard(card) {
-  const collection = JSON.parse(localStorage.getItem("collection")) || [];
+  </main>
 
-  if (collection.some(c => c.id === card.id)) {
-    playSound(sounds.error);
-    alert("Already in collection");
-    return;
-  }
-
-  collection.push(card);
-  localStorage.setItem("collection", JSON.stringify(collection));
-  playSound(sounds.add);
-}
-</script>
-
+  <!-- Script -->
+  <script src="scripts.js"></script>
 </body>
 </html>
