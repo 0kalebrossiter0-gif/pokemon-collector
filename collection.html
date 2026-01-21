@@ -1,78 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>My Pokémon Collection</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Pixel font -->
+  <!-- Pixel / Game Font -->
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
+  <!-- Main Styles -->
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<!-- HEADER (same structure as index) -->
-<header>
-  <div class="header-content">
-    <div class="header-logo">
-      <img src="pokemon-logo.png" alt="Pokémon Logo">
-    </div>
-
-    <div class="header-text">
+  <!-- HEADER -->
+  <header class="site-header">
+    <img src="pokemon-logo.png" alt="Pokémon Logo" class="site-logo">
+    <p class="header-subtitle">
       View, sort, and manage your Pokémon card collection.
-    </div>
+    </p>
+  </header>
 
-    <a href="index.html" class="header-link">Search</a>
-  </div>
-</header>
+  <!-- MAIN CONTENT -->
+  <main class="collection-page">
 
-<!-- COLLECTION PAGE -->
-<main class="collection-page">
+    <h1 class="page-title">My Collection</h1>
 
-  <!-- TITLE -->
-  <h1 class="page-title">My Collection</h1>
+    <!-- GAME-STYLE CONTROLS -->
+    <section class="game-panel controls-panel">
+      <input
+        type="text"
+        id="collectionSearch"
+        placeholder="Search cards..."
+      >
 
-  <!-- CONTROLS -->
-  <section class="collection-controls">
-    <input type="text" id="collectionSearch" placeholder="Search cards...">
+      <select id="rarityFilter">
+        <option value="all">All Rarities</option>
+        <option value="Common">Common</option>
+        <option value="Uncommon">Uncommon</option>
+        <option value="Rare">Rare</option>
+        <option value="Ultra Rare">Ultra Rare</option>
+      </select>
 
-    <select id="rarityFilter">
-      <option value="all">All Rarities</option>
-      <option value="Common">Common</option>
-      <option value="Rare">Rare</option>
-      <option value="Ultra Rare">Ultra Rare</option>
-    </select>
+      <select id="sortBy">
+        <option value="name">Sort by Name</option>
+        <option value="price">Sort by Value</option>
+      </select>
+    </section>
 
-    <select id="sortBy">
-      <option value="name">Sort by Name</option>
-      <option value="price">Sort by Value</option>
-    </select>
-  </section>
+    <!-- STATS HUD -->
+    <section class="stats-hud">
+      <div class="hud-box">
+        <span class="hud-label">Cards</span>
+        <span id="cardCount">0</span>
+      </div>
 
-  <!-- STATS PANEL -->
-  <section class="stats-panel">
-    <div class="stat-box">
-      <span class="stat-label">Cards</span>
-      <span id="cardCount">0</span>
-    </div>
-    <div class="stat-box">
-      <span class="stat-label">Total Value</span>
-      <span id="totalValue">$0.00</span>
-    </div>
-    <div class="stat-box">
-      <span class="stat-label">Average Value</span>
-      <span id="averageValue">$0.00</span>
-    </div>
-  </section>
+      <div class="hud-box">
+        <span class="hud-label">Total Value</span>
+        <span id="totalValue">$0.00</span>
+      </div>
 
-  <!-- CARD GRID -->
-  <section id="collectionGrid" class="collection-grid">
-    <!-- Cards injected here -->
-  </section>
+      <div class="hud-box">
+        <span class="hud-label">Average</span>
+        <span id="averageValue">$0.00</span>
+      </div>
+    </section>
 
-</main>
+    <!-- CARD GRID -->
+    <section id="collectionGrid" class="collection-grid">
+      <!-- Cards get injected here by JS -->
+    </section>
 
-<script src="collection.js"></script>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <p>Pokémon © Nintendo / Creatures / GAME FREAK</p>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script src="collection.js"></script>
+
 </body>
 </html>
