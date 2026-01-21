@@ -1,6 +1,4 @@
-/* =========================
-   GLOBAL RESET
-========================= */
+/* RESET */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -9,7 +7,7 @@
 
 body {
   font-family: 'Press Start 2P', monospace;
-  background: linear-gradient(180deg, #0b1d3a, #0f2a56);
+  background: linear-gradient(#0b1d3a, #08162f);
   color: white;
   min-height: 100vh;
 }
@@ -25,38 +23,39 @@ header {
 .header-content {
   max-width: 1200px;
   margin: auto;
-  padding: 20px;
+  padding: 16px 24px;
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
 }
 
-/* Pokémon Logo */
+/* LOGO CONTAINER (SAFE) */
+.header-logo {
+  height: 70px;
+  display: flex;
+  align-items: center;
+}
+
 .header-logo img {
-  height: 90px;
+  height: 100%;
   width: auto;
-
-  /* 🔥 THIS REMOVES THE WHITE BACKGROUND VISUALLY */
-  mix-blend-mode: multiply;
-
-  /* Optional polish */
-  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+  display: block;
 }
 
-/* Header Description */
+/* HEADER TEXT */
 .header-text {
-  font-size: 11px;
+  font-size: 10px;
   line-height: 1.6;
   color: #ffd700;
   max-width: 520px;
 }
 
-/* My Collection Link */
+/* COLLECTION LINK */
 .header-link {
   margin-left: auto;
   color: #ffd700;
   text-decoration: none;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .header-link:hover {
@@ -64,74 +63,66 @@ header {
 }
 
 /* =========================
-   MAIN SEARCH SECTION
+   MAIN CONTENT
 ========================= */
 main {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   padding: 80px 20px;
-}
-
-.search-container {
   text-align: center;
 }
 
-/* Title */
-.search-container h1 {
-  font-size: 22px;
+/* TITLE */
+.page-title {
+  font-size: 24px;
   margin-bottom: 40px;
-  text-shadow: 0 3px 0 #000;
+  text-shadow: 3px 3px 0 #000;
 }
 
-/* Search Box */
-.search-box {
+/* SEARCH AREA */
+.search-container {
   display: flex;
   justify-content: center;
-  gap: 16px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
-.search-box input {
-  width: 320px;
+/* INPUT */
+.search-container input {
+  font-family: 'Press Start 2P', monospace;
   padding: 16px 18px;
   font-size: 12px;
+  width: 320px;
   border-radius: 14px;
   border: 3px solid #ffd700;
   outline: none;
-  font-family: inherit;
 }
 
-.search-box input:focus {
-  box-shadow: 0 0 12px rgba(255,215,0,0.6);
-}
-
-/* Search Button */
-.search-box button {
-  padding: 16px 28px;
+/* BUTTON */
+.search-container button {
+  font-family: 'Press Start 2P', monospace;
+  padding: 16px 26px;
   font-size: 12px;
-  font-family: inherit;
-  background: linear-gradient(180deg, #ffd700, #ffb700);
-  border: none;
   border-radius: 14px;
+  border: none;
   cursor: pointer;
-  box-shadow: 0 4px 0 #c99700;
+  background: linear-gradient(#ffd700, #ffb300);
+  color: #08162f;
+  box-shadow: 0 4px 0 #caa000;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
-.search-box button:hover {
+.search-container button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 0 #c99700;
 }
 
-.search-box button:active {
+.search-container button:active {
   transform: translateY(2px);
-  box-shadow: 0 2px 0 #c99700;
+  box-shadow: 0 2px 0 #caa000;
 }
 
 /* =========================
    RESPONSIVE
 ========================= */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .header-content {
     flex-direction: column;
     align-items: flex-start;
@@ -142,7 +133,7 @@ main {
     margin-top: 10px;
   }
 
-  .search-box input {
-    width: 100%;
+  .page-title {
+    font-size: 18px;
   }
 }
