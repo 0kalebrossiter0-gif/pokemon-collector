@@ -4,200 +4,75 @@
   <meta charset="UTF-8">
   <title>My Pokémon Collection</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Pixel font -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header class="site-header">
-  <img src="pokemon-logo.png" class="logo" alt="Pokémon Logo">
-  <nav>
-    <a href="index.html">Search</a>
-    <a href="collection.html">My Collection</a>
-  </nav>
+<!-- HEADER (same structure as index) -->
+<header>
+  <div class="header-content">
+    <div class="header-logo">
+      <img src="pokemon-logo.png" alt="Pokémon Logo">
+    </div>
+
+    <div class="header-text">
+      View, sort, and manage your Pokémon card collection.
+    </div>
+
+    <a href="index.html" class="header-link">Search</a>
+  </div>
 </header>
 
-<main>
+<!-- COLLECTION PAGE -->
+<main class="collection-page">
 
-  <!-- Controls -->
-  <section class="controls">
-    <h2>My Collection</h2>
+  <!-- TITLE -->
+  <h1 class="page-title">My Collection</h1>
 
-    <input id="searchInput" placeholder="Search cards...">
+  <!-- CONTROLS -->
+  <section class="collection-controls">
+    <input type="text" id="collectionSearch" placeholder="Search cards...">
 
     <select id="rarityFilter">
       <option value="all">All Rarities</option>
       <option value="Common">Common</option>
-      <option value="Uncommon">Uncommon</option>
       <option value="Rare">Rare</option>
       <option value="Ultra Rare">Ultra Rare</option>
     </select>
 
-    <select id="sortSelect">
-      <option value="default">Sort by</option>
-      <option value="name">Name (A–Z)</option>
-      <option value="priceAsc">Price (Low → High)</option>
-      <option value="priceDesc">Price (High → Low)</option>
+    <select id="sortBy">
+      <option value="name">Sort by Name</option>
+      <option value="price">Sort by Value</option>
     </select>
   </section>
 
-  <!-- Stats -->
-  <section class="stats">
-    <p id="statCount"></p>
-    <p id="statTotal"></p>
-    <p id="statAvg"></p>
-    <p id="statTop"></p>
+  <!-- STATS PANEL -->
+  <section class="stats-panel">
+    <div class="stat-box">
+      <span class="stat-label">Cards</span>
+      <span id="cardCount">0</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-label">Total Value</span>
+      <span id="totalValue">$0.00</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-label">Average Value</span>
+      <span id="averageValue">$0.00</span>
+    </div>
   </section>
 
-  <!-- Chart -->
-  <section class="chart-section">
-    <h3>Collection Value Chart</h3>
-    <canvas id="valueChart" width="800" height="300"></canvas>
-  </section>
-
-  <!-- Grid -->
-  <section>
-    <div id="grid" class="grid"></div>
+  <!-- CARD GRID -->
+  <section id="collectionGrid" class="collection-grid">
+    <!-- Cards injected here -->
   </section>
 
 </main>
 
-<script>
-const grid = document.getElementById("grid");
-const searchInput = document.getElementById("searchInput");
-const rarityFilter = document.getElementById("rarityFilter");
-const sortSelect = document.getElementById("sortSelect");
-
-const statCount = document.getElementById("statCount");
-const statTotal = document.getElementById("statTotal");
-const statAvg = document.getElementById("statAvg");
-const statTop = document.getElementById("statTop");
-
-const canvas = document.getElementById("valueChart");
-const ctx = canvas.getContext("2d");
-
-let collection = JSON.parse(localStorage.getItem("collection")) || [];
-
-searchInput.oninput =
-rarityFilter.onchange =
-sortSelect.onchange = render;
-
-function price(card) {
-  return (
-    card.tcgplayer?.prices?.holofoil?.market ??
-    card.tcgplayer?.prices?.normal?.market ??
-    0
-  );
-}
-
-function render() {
-  grid.innerHTML = "";
-
-  let filtered = collection.filter(c => {
-    const text = searchInput.value.toLowerCase();
-    const matchesText =
-      (c.name || "").toLowerCase().includes(text) ||
-      (c.set?.name || "").toLowerCase().includes(text);
-
-    const matchesRarity =
-      rarityFilter.value === "all" ||
-      c.rarity === rarityFilter.value;
-
-    return matchesText && matchesRarity;
-  });
-
-  if (sortSelect.value === "name")
-    filtered.sort((a,b)=>a.name.localeCompare(b.name));
-  if (sortSelect.value === "priceAsc")
-    filtered.sort((a,b)=>price(a)-price(b));
-  if (sortSelect.value === "priceDesc")
-    filtered.sort((a,b)=>price(b)-price(a));
-
-  updateStats(filtered);
-  drawChart(filtered);
-
-  if (!filtered.length) {
-    grid.innerHTML = "<p>No cards found.</p>";
-    return;
-  }
-
-  filtered.forEach(card => {
-    const el = document.createElement("div");
-    el.className = "card";
-
-    el.innerHTML = `
-      <div class="card-inner">
-        <div class="card-front">
-          <img src="${card.images?.small || ""}">
-        </div>
-        <div class="card-back">
-          <h3>${card.name}</h3>
-          <p>${card.set?.name}</p>
-          <p><strong>${card.rarity || "Unknown"}</strong></p>
-          <p class="price">
-            ${price(card) ? "$"+price(card).toFixed(2) : "No price"}
-          </p>
-          <button onclick="removeCard('${card.id}')">Delete</button>
-        </div>
-      </div>
-    `;
-
-    grid.appendChild(el);
-  });
-}
-
-function updateStats(cards) {
-  const prices = cards.map(price).filter(p=>p>0);
-  const total = prices.reduce((a,b)=>a+b,0);
-  const avg = prices.length ? total/prices.length : 0;
-
-  let top = null;
-  let topPrice = 0;
-  cards.forEach(c=>{
-    if(price(c)>topPrice){
-      topPrice = price(c);
-      top = c;
-    }
-  });
-
-  statCount.textContent = `Cards: ${cards.length}`;
-  statTotal.textContent = `Total Value: $${total.toFixed(2)}`;
-  statAvg.textContent = `Average Value: $${avg.toFixed(2)}`;
-  statTop.textContent = top
-    ? `Most Valuable: ${top.name} ($${topPrice.toFixed(2)})`
-    : "";
-}
-
-function drawChart(cards) {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  const values = cards.map(price).filter(v=>v>0);
-  if (!values.length) return;
-
-  const max = Math.max(...values);
-  const barWidth = canvas.width / values.length;
-
-  values.forEach((v, i) => {
-    const h = (v / max) * (canvas.height - 40);
-    const x = i * barWidth;
-    const y = canvas.height - h;
-
-    ctx.fillStyle = "#ffcb05";
-    ctx.fillRect(x + 6, y, barWidth - 12, h);
-
-    ctx.fillStyle = "#fff";
-    ctx.font = "10px Arial";
-    ctx.fillText(`$${v.toFixed(2)}`, x + 8, y - 5);
-  });
-}
-
-function removeCard(id) {
-  collection = collection.filter(c=>c.id!==id);
-  localStorage.setItem("collection", JSON.stringify(collection));
-  render();
-}
-
-render();
-</script>
-
+<script src="collection.js"></script>
 </body>
 </html>
