@@ -3,24 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <title>Stats</title>
+
   <link rel="stylesheet" href="style.css" />
-  <script src="script.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
-<body>
 
-<header class="hero">
-  <img src="./pokemon-logo.png" class="pokemon-logo" />
-  <nav class="nav-buttons">
-    <a href="index.html" class="btn">Search</a>
-    <a href="collection.html" class="btn">Collection</a>
-    <a class="btn primary">Stats</a>
-  </nav>
-</header>
+<body onload="loadStats()">
+  <header class="hero">
+    <img src="./pokemon-logo.png" class="pokemon-logo">
 
-<main class="search-section">
-  <h1>Your Stats</h1>
-  <div id="statsBox" class="stats-box"></div>
-</main>
+    <nav class="nav-buttons">
+      <a href="index.html" class="btn">Search</a>
+      <a href="collection.html" class="btn">Collection</a>
+      <a href="stats.html" class="btn primary">Stats</a>
+    </nav>
+  </header>
 
+  <main class="search-section">
+    <h1>Your Stats</h1>
+    <div id="statsBox" class="stats-box"></div>
+  </main>
+
+  <footer>
+    Pokémon © Nintendo / Creatures / GAME FREAK
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
