@@ -14,11 +14,7 @@
 
   <!-- HEADER -->
   <header class="hero">
-    <img
-      src="./pokemon-logo.png"
-      alt="Pokémon Logo"
-      class="pokemon-logo"
-    />
+    <img src="./pokemon-logo.png" alt="Pokémon Logo" class="pokemon-logo" />
 
     <p class="tagline">
       Collect, track, and explore Pokémon trading cards — build your ultimate collection!
@@ -33,7 +29,7 @@
 
   <div class="divider"></div>
 
-  <!-- SEARCH SECTION -->
+  <!-- SEARCH -->
   <main class="search-section">
     <h1>Search Pokémon Cards</h1>
 
@@ -45,6 +41,9 @@
       />
       <button onclick="searchPokemon()">Search</button>
     </div>
+
+    <!-- RESULTS GRID -->
+    <div id="cardGrid" class="card-grid"></div>
   </main>
 
   <footer>
