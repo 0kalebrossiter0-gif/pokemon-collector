@@ -75,3 +75,42 @@ async function loadStats() {
     <p>Total Cards: ${col.length}</p>
   `;
 }
+function renderStats() {
+  const statsBox = document.getElementById("statsBox");
+  if (!statsBox) return;
+
+  const collection = JSON.parse(localStorage.getItem("collection")) || [];
+
+  const totalCards = collection.length;
+  const uniquePokemon = new Set(collection.map(c => c.name)).size;
+  const sets = new Set(collection.map(c => c.set.name)).size;
+
+  const rarityCount = {};
+  collection.forEach(card => {
+    const rarity = card.rarity || "Unknown";
+    rarityCount[rarity] = (rarityCount[rarity] || 0) + 1;
+  });
+
+  statsBox.innerHTML = `
+    <div class="stat-card">
+      <h2>${totalCards}</h2>
+      <p>Total Cards</p>
+    </div>
+    <div class="stat-card">
+      <h2>${uniquePokemon}</h2>
+      <p>Unique Pokémon</p>
+    </div>
+    <div class="stat-card">
+      <h2>${sets}</h2>
+      <p>Sets Collected</p>
+    </div>
+    ${Object.entries(rarityCount).map(
+      ([rarity, count]) => `
+        <div class="stat-card">
+          <h2>${count}</h2>
+          <p>${rarity}</p>
+        </div>
+      `
+    ).join("")}
+  `;
+}
