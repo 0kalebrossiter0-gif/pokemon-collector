@@ -1,320 +1,37 @@
-/* RESET */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
 body {
+  margin: 0;
   font-family: 'Press Start 2P', monospace;
-  background: linear-gradient(#0b1d3a, #08162f);
+  background: radial-gradient(#0a1f44, #020617);
   color: white;
-  min-height: 100vh;
 }
 
-/* =========================
-   HEADER
-========================= */
-header {
-  background: linear-gradient(90deg, #08162f, #0b1d3a);
-  border-bottom: 3px solid #ffd700;
-}
-
-.header-content {
-  max-width: 1200px;
-  margin: auto;
-  padding: 16px 24px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.header-logo {
-  height: 72px;
-  display: flex;
-  align-items: center;
-}
-
-.header-logo img {
-  height: 100%;
-  width: auto;
-  display: block;
-}
-
-.header-text {
-  font-size: 10px;
-  line-height: 1.6;
-  color: #ffd700;
-  max-width: 520px;
-}
-
-.header-link {
-  margin-left: auto;
-  color: #ffd700;
-  text-decoration: none;
-  font-size: 11px;
-}
-
-.header-link:hover {
-  text-decoration: underline;
-}
-
-/* =========================
-   CENTERED SEARCH
-========================= */
-.centered-search {
-  min-height: calc(100vh - 120px);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 40px;
-  padding-bottom: 60px;
-}
-
-/* TITLE */
-.page-title {
-  font-size: 28px;
-  text-shadow: 4px 4px 0 #000;
-}
-
-/* SEARCH BAR */
-.search-container {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-/* BIG CARTOONY INPUT */
-.search-container input {
-  font-family: 'Press Start 2P', monospace;
-  padding: 20px 22px;
-  font-size: 13px;
-  width: 380px;
-  border-radius: 16px;
-  border: 4px solid #ffd700;
-  outline: none;
-}
-
-/* BIG CARTOONY BUTTON */
-.search-container button {
-  font-family: 'Press Start 2P', monospace;
-  padding: 20px 34px;
-  font-size: 13px;
-  border-radius: 16px;
-  border: none;
-  cursor: pointer;
-  background: linear-gradient(#ffd700, #ffb300);
-  color: #08162f;
-  box-shadow: 0 5px 0 #caa000;
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
-}
-
-.search-container button:hover {
-  transform: translateY(-2px);
-}
-
-.search-container button:active {
-  transform: translateY(3px);
-  box-shadow: 0 2px 0 #caa000;
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-@media (max-width: 768px) {
-  .header-content {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .header-link {
-    margin-left: 0;
-    margin-top: 10px;
-  }
-
-  .page-title {
-    font-size: 20px;
-    text-align: center;
-  }
-
-  .search-container input {
-    width: 100%;
-    max-width: 320px;
-  }
-}
-/* =========================
-   COLLECTION PAGE
-========================= */
-
-.collection-page {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 24px 80px;
-}
-
-/* CONTROLS */
-.collection-controls {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-bottom: 30px;
-}
-
-.collection-controls input,
-.collection-controls select {
-  font-family: 'Press Start 2P', monospace;
-  padding: 14px 16px;
-  font-size: 10px;
-  border-radius: 12px;
-  border: 3px solid #ffd700;
-  background: #fff;
-}
-
-/* STATS */
-.stats-panel {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 20px;
-  margin-bottom: 40px;
-}
-
-.stat-box {
-  background: linear-gradient(#102a4f, #0b1d3a);
-  border: 3px solid #ffd700;
-  border-radius: 16px;
+.site-header {
+  text-align: center;
   padding: 20px;
-  text-align: center;
 }
 
-.stat-label {
-  font-size: 9px;
-  color: #ffd700;
-  display: block;
-  margin-bottom: 10px;
+.site-logo {
+  height: 90px;
 }
 
-/* GRID */
-.collection-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 26px;
-}
-
-/* CARD */
-.collection-card {
-  background: linear-gradient(#102a4f, #0b1d3a);
-  border: 4px solid #ffd700;
-  border-radius: 18px;
-  padding: 14px;
-  text-align: center;
-  transition: transform 0.2s ease;
-}
-
-.collection-card:hover {
-  transform: translateY(-6px);
-}
-
-.collection-card img {
-  width: 100%;
-  border-radius: 12px;
-  margin-bottom: 10px;
-}
-
-.collection-card h3 {
+.header-subtitle {
+  color: #ffcc00;
   font-size: 10px;
-  margin-bottom: 6px;
-}
-
-.collection-card p {
-  font-size: 9px;
-  color: #ffd700;
-}
-
-.collection-card button {
   margin-top: 10px;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 9px;
-  padding: 8px 12px;
-  border-radius: 10px;
-  border: none;
-  background: #ff3b3b;
-  color: white;
-  cursor: pointer;
-}
-/* =========================
-   GAME UI UPGRADE
-========================= */
-
-.page-title {
-  text-align: center;
-  font-size: 20px;
-  margin: 40px 0 30px;
 }
 
-/* GAME PANEL */
-.game-panel {
-  background: linear-gradient(#0e2a52, #091c38);
-  border: 4px solid #ffd700;
-  border-radius: 18px;
-  padding: 20px;
-  max-width: 900px;
-  margin: 0 auto 30px;
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.game-panel input,
-.game-panel select {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 10px;
-  padding: 14px 16px;
-  border-radius: 12px;
-  border: 3px solid #ffd700;
-  background: #fff;
-  min-width: 180px;
-}
-
-/* STATS HUD */
-.stats-hud {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 20px;
-  max-width: 900px;
-  margin: 0 auto 40px;
-}
-
-.hud-box {
-  background: linear-gradient(#132f5e, #0b1d3a);
-  border: 4px solid #ffd700;
-  border-radius: 16px;
-  padding: 18px;
-  text-align: center;
-}
-
-.hud-label {
-  font-size: 9px;
-  color: #ffd700;
-  display: block;
-  margin-bottom: 8px;
-}
 .tab-menu {
   display: flex;
   justify-content: center;
   gap: 12px;
-  margin: 20px 0;
+  margin-bottom: 30px;
 }
 
 .tab-btn {
-  font-family: 'Press Start 2P', monospace;
-  padding: 10px 18px;
   background: #1e3a8a;
   color: #ffcc00;
   border: 3px solid #ffcc00;
+  padding: 10px 18px;
   cursor: pointer;
 }
 
@@ -323,10 +40,74 @@ header {
   color: #1e3a8a;
 }
 
+.collection-page {
+  max-width: 1100px;
+  margin: auto;
+  padding: 20px;
+}
+
+.page-title {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
 .tab-content {
   display: none;
 }
 
 .tab-content.active {
   display: block;
+}
+
+.game-panel {
+  border: 4px solid #ffcc00;
+  border-radius: 14px;
+  padding: 20px;
+  background: linear-gradient(#0b2d6b, #04142f);
+}
+
+.controls-panel {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+input, select {
+  font-family: 'Press Start 2P', monospace;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+}
+
+.collection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 20px;
+}
+
+.stats-hud {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.hud-box {
+  border: 3px solid #ffcc00;
+  padding: 20px;
+  text-align: center;
+  min-width: 160px;
+}
+
+.hud-label {
+  display: block;
+  color: #ffcc00;
+  margin-bottom: 8px;
+}
+
+.site-footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 10px;
+  opacity: 0.6;
 }
