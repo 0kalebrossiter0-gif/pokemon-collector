@@ -121,3 +121,44 @@ footer {
   font-size: 0.5rem;
   opacity: 0.7;
 }
+/* CARD GRID */
+.card-grid {
+  margin-top: 50px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 28px;
+  padding: 0 30px;
+}
+
+/* CARD */
+.card {
+  background: linear-gradient(180deg, #0b2a5a, #03122d);
+  border: 2px solid #ffd700;
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 0 18px rgba(255, 215, 0, 0.25);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+}
+
+/* CARD IMAGE */
+.card img {
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+/* CARD TEXT */
+.card h3 {
+  font-size: 0.7rem;
+  margin-bottom: 6px;
+}
+
+.card p {
+  font-size: 0.55rem;
+  opacity: 0.85;
+}
