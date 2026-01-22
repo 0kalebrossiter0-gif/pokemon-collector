@@ -302,3 +302,31 @@ header {
   display: block;
   margin-bottom: 8px;
 }
+.tab-menu {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.tab-btn {
+  font-family: 'Press Start 2P', monospace;
+  padding: 10px 18px;
+  background: #1e3a8a;
+  color: #ffcc00;
+  border: 3px solid #ffcc00;
+  cursor: pointer;
+}
+
+.tab-btn.active {
+  background: #ffcc00;
+  color: #1e3a8a;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
