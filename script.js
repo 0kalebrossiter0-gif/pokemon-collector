@@ -1,116 +1,128 @@
-const API = "https://api.pokemontcg.io/v2/cards";
-const modal = document.getElementById("modal");
+const STORAGE_KEY = "pokemonCollection";
 
+/* ---------- UTIL ---------- */
 function getCollection() {
-  return JSON.parse(localStorage.getItem("collection") || "[]");
+  return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 }
 
-function saveCollection(col) {
-  localStorage.setItem("collection", JSON.stringify(col));
+function saveCollection(collection) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(collection));
 }
 
-async function searchPokemon() {
-  const q = document.getElementById("searchInput").value;
-  const grid = document.getElementById("cardGrid");
-  grid.innerHTML = "Loading...";
+/* ---------- ADD CARD ---------- */
+function addToCollection(card) {
+  const collection = getCollection();
 
-  const res = await fetch(`${API}?q=name:${q}`);
-  const data = await res.json();
-
-  grid.innerHTML = "";
-  data.data.slice(0, 24).forEach(card => renderCard(card, grid));
-}
-
-function renderCard(card, grid) {
-  const div = document.createElement("div");
-  div.className = "card";
-  div.innerHTML = `
-    <img src="${card.images.small}">
-    <h3>${card.name}</h3>
-  `;
-  div.onclick = () => openModal(card);
-  grid.appendChild(div);
-}
-
-function openModal(card) {
-  modal.innerHTML = `
-    <div class="modal-content">
-      <img src="${card.images.small}">
-      <h3>${card.name}</h3>
-      <p>${card.set.name}</p>
-      <button onclick="addToCollection('${card.id}')">Add</button>
-      <button onclick="closeModal()">Close</button>
-    </div>`;
-  modal.classList.remove("hidden");
-}
-
-function closeModal() {
-  modal.classList.add("hidden");
-}
-
-async function addToCollection(id) {
-  const col = getCollection();
-  if (col.includes(id)) return;
-  col.push(id);
-  saveCollection(col);
-  closeModal();
-}
-
-async function loadCollection() {
-  const grid = document.getElementById("collectionGrid");
-  const col = getCollection();
-  grid.innerHTML = "";
-
-  for (const id of col) {
-    const res = await fetch(`${API}/${id}`);
-    const card = (await res.json()).data;
-    renderCard(card, grid);
+  if (!collection.find(c => c.id === card.id)) {
+    collection.push(card);
+    saveCollection(collection);
+    alert(`${card.name} added to your collection!`);
+  } else {
+    alert("Card already in collection!");
   }
 }
 
-async function loadStats() {
-  const box = document.getElementById("statsBox");
-  const col = getCollection();
-  box.innerHTML = `
-    <p>Total Cards: ${col.length}</p>
-  `;
+/* ---------- SEARCH (Pokémon TCG API) ---------- */
+async function searchCards() {
+  const query = document.getElementById("searchInput").value.trim();
+  if (!query) return;
+
+  const res = await fetch(
+    `https://api.pokemontcg.io/v2/cards?q=name:${query}`
+  );
+  const data = await res.json();
+
+  const grid = document.getElementById("cardGrid");
+  grid.innerHTML = "";
+
+  data.data.forEach(card => {
+    const div = document.createElement("div");
+    div.className = "card";
+
+    div.innerHTML = `
+      <img src="${card.images.small}" />
+      <h3>${card.name}</h3>
+      <button>Add to Collection</button>
+    `;
+
+    div.querySelector("button").onclick = () =>
+      addToCollection({
+        id: card.id,
+        name: card.name,
+        image: card.images.small,
+        supertype: card.supertype,
+        rarity: card.rarity || "Unknown"
+      });
+
+    grid.appendChild(div);
+  });
 }
-function renderStats() {
+
+/* ---------- COLLECTION PAGE ---------- */
+function loadCollection() {
+  const container = document.getElementById("collectionGrid");
+  if (!container) return;
+
+  const collection = getCollection();
+  container.innerHTML = "";
+
+  if (collection.length === 0) {
+    container.innerHTML = "<p>No cards collected yet.</p>";
+    return;
+  }
+
+  collection.forEach(card => {
+    const div = document.createElement("div");
+    div.className = "card";
+
+    div.innerHTML = `
+      <img src="${card.image}" />
+      <h3>${card.name}</h3>
+      <p>${card.rarity}</p>
+    `;
+
+    container.appendChild(div);
+  });
+}
+
+/* ---------- STATS PAGE ---------- */
+function loadStats() {
   const statsBox = document.getElementById("statsBox");
   if (!statsBox) return;
 
-  const collection = JSON.parse(localStorage.getItem("collection")) || [];
+  const collection = getCollection();
 
-  const totalCards = collection.length;
-  const uniquePokemon = new Set(collection.map(c => c.name)).size;
-  const sets = new Set(collection.map(c => c.set.name)).size;
+  if (collection.length === 0) {
+    statsBox.innerHTML = "<p>No stats yet — collect some cards!</p>";
+    return;
+  }
 
+  const total = collection.length;
   const rarityCount = {};
+  const typeCount = {};
+
   collection.forEach(card => {
-    const rarity = card.rarity || "Unknown";
-    rarityCount[rarity] = (rarityCount[rarity] || 0) + 1;
+    rarityCount[card.rarity] = (rarityCount[card.rarity] || 0) + 1;
+    typeCount[card.supertype] = (typeCount[card.supertype] || 0) + 1;
   });
 
   statsBox.innerHTML = `
-    <div class="stat-card">
-      <h2>${totalCards}</h2>
-      <p>Total Cards</p>
-    </div>
-    <div class="stat-card">
-      <h2>${uniquePokemon}</h2>
-      <p>Unique Pokémon</p>
-    </div>
-    <div class="stat-card">
-      <h2>${sets}</h2>
-      <p>Sets Collected</p>
-    </div>
-    ${Object.entries(rarityCount).map(
-      ([rarity, count]) => `
-        <div class="stat-card">
-          <h2>${count}</h2>
-          <p>${rarity}</p>
-        </div>
-      `
-    ).join("")}
+    <p><strong>Total Cards:</strong> ${total}</p>
+
+    <h3>Rarity Breakdown</h3>
+    ${Object.entries(rarityCount)
+      .map(([k, v]) => `<p>${k}: ${v}</p>`)
+      .join("")}
+
+    <h3>Card Types</h3>
+    ${Object.entries(typeCount)
+      .map(([k, v]) => `<p>${k}: ${v}</p>`)
+      .join("")}
   `;
 }
+
+/* ---------- AUTO LOAD ---------- */
+document.addEventListener("DOMContentLoaded", () => {
+  loadCollection();
+  loadStats();
+});
