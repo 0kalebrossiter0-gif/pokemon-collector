@@ -2,62 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>My Pokémon Collection</title>
+  <title>Your Collection</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
 
-<header class="main-header">
-  <img
-    src="images/pokemon-logo.png"
-    alt="Pokémon Logo"
-    class="pokemon-logo glow float"
-  />
-
-  <p class="tagline">
-    View, sort, and manage your Pokémon card collection.
-  </p>
-
-  <nav class="tab-menu">
-    <a href="index.html" class="tab">Search</a>
-    <a href="collection.html" class="tab active">Collection</a>
-    <a href="#" class="tab">Stats</a>
+<header class="hero">
+  <img src="./pokemon-logo.png" class="pokemon-logo" />
+  <nav class="nav-buttons">
+    <a href="index.html" class="btn">Search</a>
+    <a class="btn primary">Collection</a>
+    <a href="stats.html" class="btn">Stats</a>
   </nav>
 </header>
 
-<main class="content">
-  <h1 class="page-title">My Collection</h1>
-
-  <div class="collection-controls">
-    <input type="text" placeholder="Search cards...">
-    <select>
-      <option>All Rarities</option>
-    </select>
-    <select>
-      <option>Sort by Name</option>
-    </select>
-  </div>
-
-  <div class="stats-row">
-    <div class="stat-card">
-      <h3>Cards</h3>
-      <p>0</p>
-    </div>
-    <div class="stat-card">
-      <h3>Total Value</h3>
-      <p>$0.00</p>
-    </div>
-    <div class="stat-card">
-      <h3>Average</h3>
-      <p>$0.00</p>
-    </div>
-  </div>
+<main class="search-section">
+  <h1>Your Collection</h1>
+  <div id="collectionGrid" class="card-grid"></div>
 </main>
 
-<footer class="footer">
-  Pokémon © Nintendo / Creatures / GAME FREAK
-</footer>
+<div id="modal" class="modal hidden"></div>
 
+<script src="script.js"></script>
+<script>loadCollection();</script>
 </body>
 </html>
