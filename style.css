@@ -122,3 +122,36 @@ button {
   margin-top: 40px;
   font-size: 0.8rem;
 }
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+  width: 100%;
+  max-width: 900px;
+}
+
+.stat-card {
+  background: rgba(255, 215, 0, 0.1);
+  border: 2px solid #ffd700;
+  border-radius: 14px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.25);
+  animation: float 4s ease-in-out infinite;
+}
+
+.stat-card h2 {
+  font-size: 2.5rem;
+  color: #ffd700;
+}
+
+.stat-card p {
+  font-size: 1rem;
+  opacity: 0.85;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
