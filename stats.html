@@ -2,29 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Stats</title>
+  <title>Stats | Pokémon Card Collector</title>
 
+  <!-- Game-style font -->
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <!-- Main stylesheet -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<header class="hero">
-  <img src="./pokemon-logo.png" class="pokemon-logo" />
-  <nav class="nav-buttons">
-    <a href="index.html" class="btn">Search</a>
-    <a href="collection.html" class="btn">Collection</a>
-    <a class="btn primary">Stats</a>
-  </nav>
-</header>
+  <!-- ===== HERO / HEADER ===== -->
+  <header class="hero">
+    <img
+      src="./pokemon-logo.png"
+      alt="Pokémon Logo"
+      class="pokemon-logo"
+    />
 
-<main class="search-section">
-  <h1>Your Stats</h1>
-  <div id="statsBox" class="stats-box"></div>
-</main>
+    <p class="subtitle">
+      Collect, track, and explore Pokémon trading cards — build your ultimate collection!
+    </p>
 
-<script src="script.js"></script>
-<script>loadStats();</script>
+    <nav class="nav-buttons">
+      <a href="index.html" class="btn">Search</a>
+      <a href="collection.html" class="btn">Collection</a>
+      <a href="stats.html" class="btn primary">Stats</a>
+    </nav>
+  </header>
+
+  <div class="divider"></div>
+
+  <!-- ===== STATS SECTION ===== -->
+  <main class="search-section">
+    <h1>Your Stats</h1>
+
+    <!-- Stats will be injected here by JS -->
+    <div id="statsBox" class="stats-grid"></div>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    Pokémon © Nintendo / Creatures / GAME FREAK
+  </footer>
+
+  <!-- ===== SCRIPTS ===== -->
+  <script src="script.js"></script>
+  <script>
+    // Run stats rendering when page loads
+    renderStats();
+  </script>
+
 </body>
 </html>
-
