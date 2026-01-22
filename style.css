@@ -1,68 +1,41 @@
-/* RESET */
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
-}
-
-/* GLOBAL */
-body {
   font-family: 'Press Start 2P', cursive;
-  background: radial-gradient(circle at top, #0b2a5a, #020b1f);
-  color: #ffffff;
-  text-align: center;
-  min-height: 100vh;
 }
 
-/* HERO */
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, #0b2a5a, #020b1d);
+  color: white;
+  text-align: center;
+}
+
 .hero {
-  padding: 60px 20px 40px;
+  padding: 60px 20px;
 }
 
 .pokemon-logo {
-  width: 320px;
-  max-width: 90%;
-  margin-bottom: 30px;
-  filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.7));
-  animation: float 4s ease-in-out infinite;
+  width: 300px;
+  margin-bottom: 20px;
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
-/* TAGLINE */
 .tagline {
   font-size: 0.7rem;
-  margin-bottom: 30px;
-  line-height: 1.6;
+  opacity: 0.9;
 }
 
-/* NAV BUTTONS */
 .nav-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-  flex-wrap: wrap;
+  margin-top: 25px;
 }
 
 .btn {
-  font-family: 'Press Start 2P', cursive;
-  font-size: 0.7rem;
+  display: inline-block;
+  margin: 6px;
   padding: 14px 22px;
-  border-radius: 30px;
   border: 2px solid #ffd700;
-  background: transparent;
+  border-radius: 16px;
   color: #ffd700;
   text-decoration: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn:hover {
-  background: #ffd700;
-  color: #000;
 }
 
 .btn.primary {
@@ -70,95 +43,82 @@ body {
   color: #000;
 }
 
-/* DIVIDER */
 .divider {
   height: 4px;
-  background: linear-gradient(to right, transparent, #ffd700, transparent);
-  margin: 40px 0;
+  background: #ffd700;
 }
 
-/* SEARCH SECTION */
 .search-section {
-  padding: 40px 20px;
+  padding: 60px 20px;
 }
 
-.search-section h1 {
-  font-size: 1.2rem;
-  margin-bottom: 30px;
-}
-
-/* SEARCH BOX */
 .search-box {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  flex-wrap: wrap;
+  margin: 30px 0;
 }
 
-.search-box input {
-  font-family: 'Press Start 2P', cursive;
+input {
   padding: 14px;
   width: 260px;
-  border-radius: 12px;
+  border-radius: 14px;
   border: none;
-  outline: none;
-  font-size: 0.6rem;
 }
 
-.search-box button {
-  font-family: 'Press Start 2P', cursive;
-  padding: 14px 22px;
-  border-radius: 12px;
+button {
+  padding: 14px 20px;
+  border-radius: 14px;
   border: none;
   background: #ffd700;
-  font-size: 0.6rem;
+  margin-left: 10px;
   cursor: pointer;
 }
 
-/* FOOTER */
-footer {
-  margin: 60px 0 20px;
-  font-size: 0.5rem;
-  opacity: 0.7;
-}
-/* CARD GRID */
 .card-grid {
-  margin-top: 50px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 28px;
-  padding: 0 30px;
+  gap: 30px;
+  padding: 30px;
 }
 
-/* CARD */
 .card {
-  background: linear-gradient(180deg, #0b2a5a, #03122d);
+  background: linear-gradient(#0b2a5a, #041430);
   border: 2px solid #ffd700;
   border-radius: 18px;
   padding: 16px;
-  box-shadow: 0 0 18px rgba(255, 215, 0, 0.25);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+  transition: transform .2s;
 }
 
 .card:hover {
-  transform: translateY(-8px) scale(1.03);
-  box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+  transform: scale(1.05);
 }
 
-/* CARD IMAGE */
 .card img {
   width: 100%;
   border-radius: 12px;
-  margin-bottom: 12px;
 }
 
-/* CARD TEXT */
-.card h3 {
-  font-size: 0.7rem;
-  margin-bottom: 6px;
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.card p {
-  font-size: 0.55rem;
-  opacity: 0.85;
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: #0b2a5a;
+  border: 3px solid #ffd700;
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 300px;
+}
+
+.stats-box {
+  margin-top: 40px;
+  font-size: 0.8rem;
 }
