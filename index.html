@@ -1,47 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Pokémon Card Collector</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Pixel Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
-  <!-- HEADER -->
-  <header>
-    <div class="header-content">
-      <div class="header-logo">
-        <img src="pokemon-logo.png" alt="Pokémon Logo">
-      </div>
+<header class="main-header">
+  <img
+    src="images/pokemon-logo.png"
+    alt="Pokémon Logo"
+    class="pokemon-logo glow float"
+  />
 
-      <div class="header-text">
-        Collect, track, and explore Pokémon trading cards — build your ultimate collection!
-      </div>
+  <p class="tagline">
+    Collect, track, and explore Pokémon trading cards — build your ultimate collection!
+  </p>
 
-      <a href="collection.html" class="header-link">My Collection</a>
-    </div>
-  </header>
+  <!-- Tabs -->
+  <nav class="tab-menu">
+    <a href="index.html" class="tab active">Search</a>
+    <a href="collection.html" class="tab">Collection</a>
+    <a href="#" class="tab">Stats</a>
+  </nav>
+</header>
 
-  <!-- CENTERED SEARCH SECTION -->
-  <main class="centered-search">
-    <h1 class="page-title">Search Pokémon Cards</h1>
+<main class="content">
+  <h1 class="page-title">Search Pokémon Cards</h1>
 
-    <div class="search-container">
-      <input
-        type="text"
-        id="searchInput"
-        placeholder="Search Pokémon (e.g. Pikachu)"
-      >
-      <button id="searchButton">Search</button>
-    </div>
+  <div class="search-box">
+    <input type="text" placeholder="Search Pokémon (e.g. Pikachu)">
+    <button>Search</button>
+  </div>
+</main>
 
-    <div id="results"></div>
-  </main>
+<footer class="footer">
+  Pokémon © Nintendo / Creatures / GAME FREAK
+</footer>
 
 </body>
 </html>
