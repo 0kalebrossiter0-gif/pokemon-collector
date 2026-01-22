@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <title>My Pokémon Collection</title>
 
-  <!-- Pixel / Game Font -->
+  <!-- Game Font -->
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
-  <!-- Main Styles -->
+  <!-- Styles -->
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -15,60 +15,77 @@
 
   <!-- HEADER -->
   <header class="site-header">
-
+    <img src="pokemon-logo.png" alt="Pokémon Logo" class="site-logo">
     <p class="header-subtitle">
       View, sort, and manage your Pokémon card collection.
     </p>
   </header>
 
-  <!-- MAIN CONTENT -->
+  <!-- TAB MENU -->
+  <nav class="tab-menu">
+    <button class="tab-btn active" data-tab="search">Search</button>
+    <button class="tab-btn" data-tab="collection">Collection</button>
+    <button class="tab-btn" data-tab="stats">Stats</button>
+  </nav>
+
+  <!-- MAIN -->
   <main class="collection-page">
 
-    <h1 class="page-title">My Collection</h1>
+    <!-- SEARCH TAB -->
+    <section class="tab-content active" id="search">
+      <h1 class="page-title">Search Cards</h1>
 
-    <!-- GAME-STYLE CONTROLS -->
-    <section class="game-panel controls-panel">
-      <input
-        type="text"
-        id="collectionSearch"
-        placeholder="Search cards..."
-      >
+      <div class="game-panel controls-panel">
+        <input
+          type="text"
+          id="collectionSearch"
+          placeholder="Search Pokémon..."
+        >
 
-      <select id="rarityFilter">
-        <option value="all">All Rarities</option>
-        <option value="Common">Common</option>
-        <option value="Uncommon">Uncommon</option>
-        <option value="Rare">Rare</option>
-        <option value="Ultra Rare">Ultra Rare</option>
-      </select>
+        <select id="rarityFilter">
+          <option value="all">All Rarities</option>
+          <option value="Common">Common</option>
+          <option value="Uncommon">Uncommon</option>
+          <option value="Rare">Rare</option>
+          <option value="Ultra Rare">Ultra Rare</option>
+        </select>
 
-      <select id="sortBy">
-        <option value="name">Sort by Name</option>
-        <option value="price">Sort by Value</option>
-      </select>
-    </section>
-
-    <!-- STATS HUD -->
-    <section class="stats-hud">
-      <div class="hud-box">
-        <span class="hud-label">Cards</span>
-        <span id="cardCount">0</span>
-      </div>
-
-      <div class="hud-box">
-        <span class="hud-label">Total Value</span>
-        <span id="totalValue">$0.00</span>
-      </div>
-
-      <div class="hud-box">
-        <span class="hud-label">Average</span>
-        <span id="averageValue">$0.00</span>
+        <select id="sortBy">
+          <option value="name">Sort by Name</option>
+          <option value="price">Sort by Value</option>
+        </select>
       </div>
     </section>
 
-    <!-- CARD GRID -->
-    <section id="collectionGrid" class="collection-grid">
-      <!-- Cards get injected here by JS -->
+    <!-- COLLECTION TAB -->
+    <section class="tab-content" id="collection">
+      <h1 class="page-title">My Collection</h1>
+
+      <section id="collectionGrid" class="collection-grid">
+        <!-- Cards injected by JS -->
+      </section>
+    </section>
+
+    <!-- STATS TAB -->
+    <section class="tab-content" id="stats">
+      <h1 class="page-title">Collection Stats</h1>
+
+      <section class="stats-hud">
+        <div class="hud-box">
+          <span class="hud-label">Cards</span>
+          <span id="cardCount">0</span>
+        </div>
+
+        <div class="hud-box">
+          <span class="hud-label">Total Value</span>
+          <span id="totalValue">$0.00</span>
+        </div>
+
+        <div class="hud-box">
+          <span class="hud-label">Average</span>
+          <span id="averageValue">$0.00</span>
+        </div>
+      </section>
     </section>
 
   </main>
@@ -78,7 +95,23 @@
     <p>Pokémon © Nintendo / Creatures / GAME FREAK</p>
   </footer>
 
-  <!-- SCRIPTS -->
+  <!-- TAB SCRIPT -->
+  <script>
+    const tabButtons = document.querySelectorAll(".tab-btn");
+    const tabContents = document.querySelectorAll(".tab-content");
+
+    tabButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        tabButtons.forEach(b => b.classList.remove("active"));
+        tabContents.forEach(c => c.classList.remove("active"));
+
+        btn.classList.add("active");
+        document.getElementById(btn.dataset.tab).classList.add("active");
+      });
+    });
+  </script>
+
+  <!-- COLLECTION LOGIC -->
   <script src="collection.js"></script>
 
 </body>
