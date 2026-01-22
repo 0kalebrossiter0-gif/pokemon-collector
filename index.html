@@ -3,43 +3,54 @@
 <head>
   <meta charset="UTF-8" />
   <title>Pokémon Card Collector</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Game-style font -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
 
-<header class="main-header">
-<img
-  src="./pokemon-logo.png"
-  alt="Pokémon Logo"
-  class="pokemon-logo glow float"
-/>
+  <!-- HEADER -->
+  <header class="hero">
+    <img
+      src="./pokemon-logo.png"
+      alt="Pokémon Logo"
+      class="pokemon-logo"
+    />
 
+    <p class="tagline">
+      Collect, track, and explore Pokémon trading cards — build your ultimate collection!
+    </p>
 
-  <p class="tagline">
-    Collect, track, and explore Pokémon trading cards — build your ultimate collection!
-  </p>
+    <div class="nav-buttons">
+      <a href="index.html" class="btn primary">Search</a>
+      <a href="collection.html" class="btn">Collection</a>
+      <button class="btn">Stats</button>
+    </div>
+  </header>
 
-  <!-- Tabs -->
-  <nav class="tab-menu">
-    <a href="index.html" class="tab active">Search</a>
-    <a href="collection.html" class="tab">Collection</a>
-    <a href="#" class="tab">Stats</a>
-  </nav>
-</header>
+  <div class="divider"></div>
 
-<main class="content">
-  <h1 class="page-title">Search Pokémon Cards</h1>
+  <!-- SEARCH SECTION -->
+  <main class="search-section">
+    <h1>Search Pokémon Cards</h1>
 
-  <div class="search-box">
-    <input type="text" placeholder="Search Pokémon (e.g. Pikachu)">
-    <button>Search</button>
-  </div>
-</main>
+    <div class="search-box">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Search Pokémon (e.g. Pikachu)"
+      />
+      <button onclick="searchPokemon()">Search</button>
+    </div>
+  </main>
 
-<footer class="footer">
-  Pokémon © Nintendo / Creatures / GAME FREAK
-</footer>
+  <footer>
+    Pokémon © Nintendo / Creatures / GAME FREAK
+  </footer>
 
+  <script src="script.js"></script>
 </body>
 </html>
