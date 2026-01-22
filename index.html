@@ -3,41 +3,41 @@
 <head>
   <meta charset="UTF-8" />
   <title>Pokémon Card Collector</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
+
 <body>
+  <header class="hero">
+    <img src="./pokemon-logo.png" class="pokemon-logo" alt="Pokémon Logo">
 
-<header class="hero">
-  <img src="./pokemon-logo.png" class="pokemon-logo" />
-  <p class="tagline">Collect, track, and explore Pokémon trading cards</p>
+    <p class="tagline">
+      Collect, track, and explore Pokémon trading cards — build your ultimate collection!
+    </p>
 
-  <nav class="nav-buttons">
-    <a class="btn primary">Search</a>
-    <a href="collection.html" class="btn">Collection</a>
-    <a href="stats.html" class="btn">Stats</a>
-  </nav>
-</header>
+    <nav class="nav-buttons">
+      <a href="index.html" class="btn primary">Search</a>
+      <a href="collection.html" class="btn">Collection</a>
+      <a href="stats.html" class="btn">Stats</a>
+    </nav>
+  </header>
 
-<div class="divider"></div>
+  <main class="search-section">
+    <h1>Search Pokémon Cards</h1>
 
-<main class="search-section">
-  <h1>Search Pokémon Cards</h1>
+    <div class="search-bar">
+      <input id="searchInput" placeholder="Pikachu, Charizard">
+      <button onclick="searchCards()">Search</button>
+    </div>
 
-  <div class="search-box">
-    <input id="searchInput" placeholder="Pikachu, Charizard..." />
-    <button onclick="searchPokemon()">Search</button>
-  </div>
+    <div id="results" class="card-grid"></div>
+  </main>
 
-  <div id="cardGrid" class="card-grid"></div>
-</main>
+  <footer>
+    Pokémon © Nintendo / Creatures / GAME FREAK
+  </footer>
 
-<div id="modal" class="modal hidden"></div>
-
-<footer>Pokémon © Nintendo / Creatures / GAME FREAK</footer>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
